@@ -89,3 +89,20 @@ class GridDataManager():
             return None, fileNotFoundName
 
         return twoDIntMatrix, fileNotFoundName
+
+    def insertGridPatternToGridData(self, gridPatternMatrix, gridDataMatrix, zeroBasedInsertPosX, zeroBasedInsertPosY, doOverwrite = True):
+        '''
+        This method inserts the passed gridPatternMatrix in the passed gridDataMatrix at the position
+        insertPosX, insertPosY. If doOverwrite is True, then the gridDataMatrix size is not changed
+        and the inserted data overwrites the existing data. Else, cols and rows are added to
+        gridDataMatrix to make room to the inserted data.
+
+        :param gridPatternMatrix: 2 dimensions list
+        :param gridDataMatrix: 2 dimensions list
+        :param zeroBasedInsertPosX: integer
+        :param zeroBasedInsertPosY: integer
+        :param doOverwrite: boolean
+
+        :return: the modified gridDataMatrix (or a copy ?)
+        '''
+        pass
