@@ -42,11 +42,12 @@ class TestGridDataManager(unittest.TestCase):#
 
         os.remove(csvFileName)
 
-    def testReadGridData(self):
+    def testReadGridDataSquareMatrix(self):
         '''
         This test case ensures that when reading a matrix data csv file whose first line is the
         column title line and the first column the line index, the returned data matrix contains
-        only the data, neither the column title line nor the first line index column.
+        only the data, neither the column title line nor the first line index column. Here, a square
+        matrix is read
         '''
         csvFileName = "test.csv"
         gridDataMgr = GridDataManager(csvFileName)
@@ -60,6 +61,28 @@ class TestGridDataManager(unittest.TestCase):#
         gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=4, requiredDimY=4)
 
         self.assertEqual([[1, 1, 0, 0],[1, 0, 1, 1],[0, 0, 1, 1],[1, 1, 1, 1]], gridData)
+        self.assertIsNone(fileNotFoundName)
+
+        os.remove(csvFileName)
+
+    def testReadGridDataRectangularMatrix(self):
+        '''
+        This test case ensures that when reading a matrix data csv file whose first line is the
+        column title line and the first column the line index, the returned data matrix contains
+        only the data, neither the column title line nor the first line index column. Here, a rectangular
+        matrix is read
+        '''
+        csvFileName = "test.csv"
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData = [[1, 1, 0, 0],
+                    [1, 0, 1, 1],
+                    [0, 0, 1, 1]]
+        gridDataMgr.writeGridData(gridData)
+
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=4, requiredDimY=3)
+
+        self.assertEqual([[1, 1, 0, 0],[1, 0, 1, 1],[0, 0, 1, 1]], gridData)
         self.assertIsNone(fileNotFoundName)
 
         os.remove(csvFileName)
@@ -82,6 +105,50 @@ class TestGridDataManager(unittest.TestCase):#
         gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=5, requiredDimY=5)
 
         self.assertEqual([[1, 1, 0, 0, 0],[1, 0, 1, 1, 0],[0, 0, 1, 1, 0],[1, 1, 1, 1, 0],[0, 0, 0, 0, 0]], gridData)
+        self.assertIsNone(fileNotFoundName)
+
+        os.remove(csvFileName)
+
+    def testReadTooLargeGridDataSquareMatrix1ExcessRow1ExcessCol(self):
+        '''
+        This test case ensures that when reading a matrix data csv file which contains data denoting
+        a matrix larger than the expected size, the excess data is wiped out. Here, a 4 x 4 square matrix
+        is read and a 3 x 3 matrix is returned.
+        '''
+        csvFileName = "test.csv"
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData = [[1, 1, 0, 0],
+                    [1, 0, 1, 1],
+                    [0, 0, 1, 1],
+                    [1, 1, 1, 1]]
+        gridDataMgr.writeGridData(gridData)
+
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=3, requiredDimY=3)
+
+        self.assertEqual([[1, 1, 0],[1, 0, 1],[0, 0, 1]], gridData)
+        self.assertIsNone(fileNotFoundName)
+
+        os.remove(csvFileName)
+
+    def testReadTooLargeGridDataSquareMatrix2ExcessRow2ExcessCol(self):
+        '''
+        This test case ensures that when reading a matrix data csv file which contains data denoting
+        a matrix larger than the expected size, the excess data is wiped out. Here, a 4 x 4 square matrix
+        is read and a 2 x 2 matrix is returned.
+        '''
+        csvFileName = "test.csv"
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData = [[1, 1, 0, 0],
+                    [1, 0, 1, 1],
+                    [0, 0, 1, 1],
+                    [1, 1, 1, 1]]
+        gridDataMgr.writeGridData(gridData)
+
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=2, requiredDimY=2)
+
+        self.assertEqual([[1, 1],[1, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
 
         os.remove(csvFileName)
@@ -127,6 +194,51 @@ class TestGridDataManager(unittest.TestCase):#
         gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=5, requiredDimY=5)
 
         self.assertEqual([[1, 1, 0, 0, 0],[1, 0, 1, 0, 0],[0, 0, 1, 0, 0],[1, 1, 1, 0, 0],[0, 0, 0, 0, 0]], gridData)
+        self.assertIsNone(fileNotFoundName)
+
+        os.remove(csvFileName)
+
+    def testReadTooLargeGridDataRectangular4x3Matrix1ExcessRow2ExcessCol(self):
+        '''
+        This test case ensures that when reading a matrix data csv file which contains data denoting
+        a matrix larger than the expected size, the excess data are ignored. Here, a rectangular 4 x 3
+        matrix is handled with returning a 3 x 1 rectangular matrix, i.e. 1 excess rows and 2 excess
+        columns
+        '''
+        csvFileName = "test.csv"
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData = [[1, 1, 0],
+                    [1, 0, 1],
+                    [0, 0, 1],
+                    [1, 1, 1]]
+        gridDataMgr.writeGridData(gridData)
+
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=3, requiredDimY=1)
+
+        self.assertEqual([[1, 1, 0]], gridData)
+        self.assertIsNone(fileNotFoundName)
+
+        os.remove(csvFileName)
+
+    def testReadTooLargeGridDataRectangular4x3Matrix2ExcessRow1ExcessCol(self):
+        '''
+        This test case ensures that when reading a matrix data csv file which contains data denoting
+        a matrix larger than the expected size, the excess data are ignored. Here, a rectangular 4 x 3
+        matrix is handled with returning a 2 x 2 square matrix, i.e. 2 excess rows and 1 excess columns
+        '''
+        csvFileName = "test.csv"
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData = [[1, 1, 0],
+                    [1, 0, 1],
+                    [0, 0, 1],
+                    [1, 1, 1]]
+        gridDataMgr.writeGridData(gridData)
+
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=2, requiredDimY=2)
+
+        self.assertEqual([[1, 1], [1, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
 
         os.remove(csvFileName)

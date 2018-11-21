@@ -47,32 +47,43 @@ class GridDataManager():
                 dataDimX = len(header) - 1
                 fillerDimX = 0
 
-                if dataDimX < requiredDimX:
-                    # here, the read data matrix col number is smaller than the expected matrix x size
-                    fillerDimX = requiredDimX - dataDimX
+                # if fillerDimX is larger than 0, then the read data matrix col number is smaller
+                # than the expected matrix x size and filler col data will have to be generated.
+                # If it is smaller than 0, then the read data matrix col number is larger than the
+                # expected matrix x size and will have to be truncated
+                fillerDimX = requiredDimX - dataDimX
 
                 dataDimY = 0
 
                 for row in reader:
                     dataDimY += 1
-                    intLst = [int(s) for s in row] # converting the row which contains strings into integers
+                    if dataDimY > requiredDimY:
+                        # if the number of read rows data is larger than the expected matrix y size then
+                        # the excess rows are ignored
+                        break
+                    else:
+                        intLst = [int(s) for s in row] # converting the row which contains strings into integers
                     cellDataRow = intLst[1:] # stripping off col 0 which contains line numbers
                     if fillerDimX > 0:
                         # building a filler list denoting the missing col in the read matrix data
                         fillerList = [0 for _ in range(fillerDimX)]
+                    elif fillerDimX < 0:
+                        # truncating the read row data to respect the required col number (x dimension)
+                        cellDataRow = cellDataRow[:fillerDimX]
+                        fillerList = []
                     else:
+                        # read and expected col numbers are identical
                         fillerList = []
                     twoDIntMatrix.append(cellDataRow + fillerList)
 
                 if dataDimY < requiredDimY:
-                    # here, the read data matrix row number is smaller than the expected matrix y size
+                    # if the read data matrix row number is smaller than the expected matrix y size
+                    # filler row data will have to be generated for each missing row
                     fillerDimY = requiredDimY - dataDimY
-                else:
-                    fillerDimY = 0
 
-                for _ in range(fillerDimY):
-                    # adding a filler list for each missing row in the read matrix data
-                    twoDIntMatrix.append([0 for _ in range(requiredDimX)])
+                    for _ in range(fillerDimY):
+                        # adding a filler list for each missing row in the read matrix data
+                        twoDIntMatrix.append([0 for _ in range(requiredDimX)])
         except FileNotFoundError as e:
             fileNotFoundName = e.filename
             return None, fileNotFoundName
