@@ -427,7 +427,8 @@ class GridView():
 
         :return: None if ok, missing file name if not.
         '''
-        gridTable, fileNotFoundName = self.gridDataMgr.readGridData(self.horizontalMaxManagedCellNumber, self.verticalMaxManagedCellNumber)
+        gridTable, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=self.horizontalMaxManagedCellNumber,
+                                                                    requiredDimY=self.verticalMaxManagedCellNumber)
 
         if gridTable:
             self.cellValueGrid = gridTable
