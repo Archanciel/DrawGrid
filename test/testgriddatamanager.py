@@ -14,37 +14,161 @@ from griddatamanager import GridDataManager
 class TestGridDataManager(unittest.TestCase):#
 
     def testWriteGridData(self):
+        '''
+        This test case ensures that the grid data are written into the csv file with a column title
+        line as well as with a 0 index column storing the 0 based line index.
+        '''
         csvFileName = "test.csv"
         gridDataMgr = GridDataManager(csvFileName)
-        gridData = [[0, 1, 1, 0, 0],
-                    [0, 1, 0, 1, 1]]
+        gridData = [[1, 1, 0, 0],
+                    [1, 0, 1, 1],
+                    [0, 0, 1, 1],
+                    [1, 1, 1, 1]]
         gridDataMgr.writeGridData(gridData)
 
-        with open(csvFileName, 'r') as csvFile:
-            csvReader = csv.reader(csvFile)
+        with open(csvFileName, 'r') as file:
+            reader = csv.reader(file, delimiter='\t')
 
-            #checking header
-            self.assertEqual(['\t0\t1\t2\t3\t4'], next(csvReader))
+            # reading the header line and use it to determine the x dimension of the input data
 
-            #checking line 0
-            self.assertEqual(['0\t0\t1\t1\t0\t0'], next(csvReader))
+            header = next(reader)
+            self.assertEqual(['','0','1','2','3'], header)
 
-            #checking line 1
-            self.assertEqual(['1\t0\t1\t0\t1\t1'], next(csvReader))
+            self.assertEqual(['0','1','1','0','0'], next(reader), 'csv matrix data line 0')
+            self.assertEqual(['1','1','0','1','1'], next(reader), 'csv matrix data line 1')
+            self.assertEqual(['2','0','0','1','1'], next(reader), 'csv matrix data line 2')
+            self.assertEqual(['3','1','1','1','1'], next(reader), 'csv matrix data line 3')
+
 
         os.remove(csvFileName)
 
     def testReadGridData(self):
+        '''
+        This test case ensures that when reading a matrix data csv file whose first line is the
+        column title line and the first column the line index, the returned data matrix contains
+        only the data, neither the column title line nor the first line index column.
+        '''
         csvFileName = "test.csv"
         gridDataMgr = GridDataManager(csvFileName)
-        gridData = [[0, 1, 1, 0, 0],
-                    [0, 1, 0, 1, 1]]
+        gridData = [[1, 1, 0, 0],
+                    [1, 0, 1, 1],
+                    [0, 0, 1, 1],
+                    [1, 1, 1, 1]]
         gridDataMgr.writeGridData(gridData)
 
         gridDataMgr = GridDataManager(csvFileName)
-        gridData = gridDataMgr.readGridData()
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=4, requiredDimY=4)
 
-        self.assertEqual([[0, 1, 1, 0, 0],[0, 1, 0, 1, 1]], gridData)
+        self.assertEqual([[1, 1, 0, 0],[1, 0, 1, 1],[0, 0, 1, 1],[1, 1, 1, 1]], gridData)
+        self.assertIsNone(fileNotFoundName)
+
+        os.remove(csvFileName)
+
+    def testReadTooSmallGridDataSquareMatrix(self):
+        '''
+        This test case ensures that when reading a matrix data csv file which contains data denoting
+        a matrix smaller than the expected size, the missing data are completed with 0 values to fill
+        the gap. Here, a square matrix is handled with only 1 missing row and 1 missing column.
+        '''
+        csvFileName = "test.csv"
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData = [[1, 1, 0, 0],
+                    [1, 0, 1, 1],
+                    [0, 0, 1, 1],
+                    [1, 1, 1, 1]]
+        gridDataMgr.writeGridData(gridData)
+
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=5, requiredDimY=5)
+
+        self.assertEqual([[1, 1, 0, 0, 0],[1, 0, 1, 1, 0],[0, 0, 1, 1, 0],[1, 1, 1, 1, 0],[0, 0, 0, 0, 0]], gridData)
+        self.assertIsNone(fileNotFoundName)
+
+        os.remove(csvFileName)
+
+    def testReadTooSmallGridDataRectangular4x3Matrix(self):
+        '''
+        This test case ensures that when reading a matrix data csv file which contains data denoting
+        a matrix smaller than the expected size, the missing data are completed with 0 values to fill
+        the gap. Here, a rectangular 4 x 3 matrix is handled with only 1 missing row and 1 missing
+        column.
+        '''
+        csvFileName = "test.csv"
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData = [[1, 1, 0],
+                    [1, 0, 1],
+                    [0, 0, 1],
+                    [1, 1, 1]]
+        gridDataMgr.writeGridData(gridData)
+
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=4, requiredDimY=5)
+
+        self.assertEqual([[1, 1, 0, 0],[1, 0, 1, 0],[0, 0, 1, 0],[1, 1, 1, 0],[0, 0, 0, 0]], gridData)
+        self.assertIsNone(fileNotFoundName)
+
+        os.remove(csvFileName)
+
+    def testReadTooSmallGridDataRectangular3x4Matrix(self):
+        '''
+        This test case ensures that when reading a matrix data csv file which contains data denoting
+        a matrix smaller than the expected size, the missing data are completed with 0 values to fill
+        the gap. Here, a rectangular 3 x 4 matrix is handled with only 1 missing row and 1 missing column.
+        '''
+        csvFileName = "test.csv"
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData = [[1, 1, 0, 0],
+                    [1, 0, 1, 1],
+                    [1, 1, 1, 1]]
+        gridDataMgr.writeGridData(gridData)
+
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=5, requiredDimY=4)
+
+        self.assertEqual([[1, 1, 0, 0, 0],[1, 0, 1, 1, 0],[1, 1, 1, 1, 0],[0, 0, 0, 0, 0]], gridData)
+        self.assertIsNone(fileNotFoundName)
+
+        os.remove(csvFileName)
+
+    def testReadTooSmallGridDataRectangular3x4MatrixOnly2columnsMissing(self):
+        '''
+        This test case ensures that when reading a matrix data csv file which contains data denoting
+        a matrix smaller than the expected size, the missing data are completed with 0 values to fill
+        the gap. Here, a rectangular 3 x 4 matrix is handled with 0 missing row and 2 missing columns.
+        '''
+        csvFileName = "test.csv"
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData = [[1, 1, 0, 0],
+                    [1, 0, 1, 1],
+                    [1, 1, 1, 1]]
+        gridDataMgr.writeGridData(gridData)
+
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=6, requiredDimY=3)
+
+        self.assertEqual([[1, 1, 0, 0, 0, 0],[1, 0, 1, 1, 0, 0],[1, 1, 1, 1, 0, 0]], gridData)
+        self.assertIsNone(fileNotFoundName)
+
+        os.remove(csvFileName)
+
+    def testReadTooSmallGridDataRectangular3x4MatrixOnly2RowsMissing(self):
+        '''
+        This test case ensures that when reading a matrix data csv file which contains data denoting
+        a matrix smaller than the expected size, the missing data are completed with 0 values to fill
+        the gap. Here, a rectangular 3 x 4 matrix is handled with 2 missing row and no missing column.
+        '''
+        csvFileName = "test.csv"
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData = [[1, 1, 0, 0],
+                    [1, 0, 1, 1],
+                    [1, 1, 1, 1]]
+        gridDataMgr.writeGridData(gridData)
+
+        gridDataMgr = GridDataManager(csvFileName)
+        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=4, requiredDimY=5)
+
+        self.assertEqual([[1, 1, 0, 0],[1, 0, 1, 1],[1, 1, 1, 1],[0, 0, 0, 0],[0, 0, 0, 0]], gridData)
+        self.assertIsNone(fileNotFoundName)
 
         os.remove(csvFileName)
 

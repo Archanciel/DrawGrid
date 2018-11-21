@@ -64,9 +64,11 @@ class GridDataManager():
 
                 if dataDimY < requiredDimY:
                     fillerDimY = requiredDimY - dataDimY
+                else:
+                    fillerDimY = 0
 
                 for _ in range(fillerDimY):
-                    twoDIntMatrix.append([0 for _ in range(requiredDimY)])
+                    twoDIntMatrix.append([0 for _ in range(requiredDimX)])
         except FileNotFoundError as e:
             fileNotFoundName = e.filename
             return None, fileNotFoundName
