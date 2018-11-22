@@ -4,3 +4,4 @@ The purpose of this project is to develop a Pygame application that displays a g
 ## Libraries
 
 * pygame
+* configobj
