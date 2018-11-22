@@ -5,22 +5,49 @@ from configobj import ConfigObj
 class ConfigurationManager:
     # those constants are used outside of ConfigurationManager. For this reason,
     # they are declared inside the class
-    CONFIG_SECTION_GENERAL = 'General'
-    CONFIG_SECTION_LAYOUT = 'Layout'
 
-    CONFIG_KEY_TIME_ZONE = 'timezone'
-    DEFAULT_TIME_ZONE = 'Europe/Zurich'
+    CONFIG_SECTION_VIEW_LAYOUT = 'View layout'
 
-    CONFIG_KEY_DATE_TIME_FORMAT = 'datetimeformat'
-    DEFAULT_DATE_TIME_FORMAT = 'DD/MM/YY HH:mm'
+    # view options/settings
 
-    CONFIG_KEY_DATE_ONLY_FORMAT = 'dateonlyformat'
-    DEFAULT_DATE_ONLY_FORMAT = 'DD/MM/YY'
+    CONFIG_KEY_WINDOW_TITLE = "Window title"
+    DEFAULT_WINDOW_TITLE = "Draw grid"
 
-    CONFIG_KEY_DATA_PATH = 'datapath'
-    DEFAULT_DATA_PATH_ANDROID = '/sdcard/CryptoPricerData'
+
+    # grid constants
+
+    GRID_LINE_WIDTH_TUPLE = (1, 0)
+    # GRID_LINE_WIDTH_TUPLE = (2, 0)
+    # GRID_LINE_WIDTH_TUPLE = (3, 1)
+    # GRID_LINE_WIDTH_TUPLE = (4, 1)
+    # GRID_LINE_WIDTH_TUPLE = (5, 2)
+    # GRID_LINE_WIDTH_TUPLE = (6, 2)
+    # GRID_LINE_WIDTH_TUPLE = (7, 3)
+    # GRID_LINE_WIDTH_TUPLE = (8, 3)
+
+    GRID_LINE_WIDTH = GRID_LINE_WIDTH_TUPLE[0]
+    CELL_SIZE_OFFSET = GRID_LINE_WIDTH_TUPLE[1] # constant used when drawing an active cell to correct an unexplained
+                                                # error which introduce blank pixels at top and left of the drawned
+                                                # rectangle when the grid line width is bigger than 2 !
+
+    DEFAULT_CELL_SIZE = 15  # 15 Windows, 35 Android
+
+    # Since one cell can occupy a minimum of 1 px and the grid line width
+    # is 1 px at the minimum, 2 cells will require at least 1 + 1 + 1 + 1 + 1 = 5 px.
+    # 3 cells require at least 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
+    # n cells require at least 1 + (n * 2) px. This explains that the smallest possible
+    # cell constant SMALLEST_CELL_REQUIRED_PX_NUMBER is 2 pixels.
+    SMALLEST_CELL_REQUIRED_PX_NUMBER = 2
+
+    # Cell size under which the grid axis label zone is no longer displayed
+    AXIS_HIDE_CELL_SIZE_LIMIT = 11
+
+    GRID_COORD_MARGIN_SIZE = 20  # 20 Windows, 40 Android
+    GRID_AXIS_FONT_SIZE = 12
+
+    GRID_MOVE_INCREMENT = 1
+
     DEFAULT_DATA_PATH_IOS = '~/Documents'
-    DEFAULT_DATA_PATH_WINDOWS = 'c:\\temp'
 
     CONFIG_KEY_REFERENCE_CURRENCY = 'referencecurrency'
     DEFAULT_REFERENCE_CURRENCY = 'USD'
@@ -31,12 +58,7 @@ class ConfigurationManager:
     CONFIG_KEY_APP_SIZE = 'defaultappsize'
     DEFAULT_CONFIG_KEY_APP_SIZE_HALF_PROPORTION = '0.56'
 
-    CONFIG_KEY_HISTO_LIST_ITEM_HEIGHT = 'histolistitemheight'
-    DEFAULT_CONFIG_KEY_HISTO_LIST_ITEM_HEIGHT_ANDROID = '90'
-    DEFAULT_CONFIG_KEY_HISTO_LIST_ITEM_HEIGHT_WINDOWS = '35'
-
-    CONFIG_KEY_HISTO_LIST_VISIBLE_SIZE = 'histolistvisiblesize'
-    DEFAULT_CONFIG_HISTO_LIST_VISIBLE_SIZE = '3'
+    DEFAULT_CONFIG_KEY_ACTIVE_CELL_COLOR_ANDROID = '90'
 
     CONFIG_KEY_APP_SIZE_HALF_PROPORTION = 'appsizehalfproportion'
     APP_SIZE_HALF = 'Half'
@@ -50,68 +72,68 @@ class ConfigurationManager:
             self._setAndStoreDefaultConf()
 
         try:
-            self.__localTimeZone = self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_TIME_ZONE]
+            self.__windowTitle = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_WINDOW_TITLE]
         except KeyError:
-            self.__localTimeZone = self.DEFAULT_TIME_ZONE
+            self.__windowTitle = self.DEFAULT_WINDOW_TITLE
+            self._updated = True
+    
+        try:
+            self.__windowLocation = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_WINDOW_LOCATION]
+        except KeyError:
+            self.__windowLocation = self.DEFAULT_WINDOW_LOCATION
             self._updated = True
 
         try:
-            self.__dateTimeFormat = self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_DATE_TIME_FORMAT]
-        except KeyError:
-            self.__dateTimeFormat = self.DEFAULT_DATE_TIME_FORMAT
-            self._updated = True
-
-        try:
-            self.__dateOnlyFormat = self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_DATE_ONLY_FORMAT]
-        except KeyError:
-            self.__dateOnlyFormat = self.DEFAULT_DATE_ONLY_FORMAT
-            self._updated = True
-
-        try:
-            self.__dataPath = self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_DATA_PATH]
+            self.__gridWidth = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_WIDTH]
         except KeyError:
             if os.name == 'posix':
-                self.__dataPath = self.DEFAULT_DATA_PATH_ANDROID
+                self.__gridWidth = self.DEFAULT_GRID_WIDTHe_ANDROID
             else:
-                self.__dataPath = self.DEFAULT_DATA_PATH_WINDOWS
+                self.__gridWidth = self.DEFAULT_GRID_WIDTHe_WINDOWS
+            self._updated = True
+
+        try:
+            self.__gridHeight = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_HEIGHT]
+        except KeyError:
+            if os.name == 'posix':
+                self.__gridHeight = self.DEFAULT_GRID_HEIGHT_ANDROID
+            else:
+                self.__gridHeight = self.DEFAULT_GRID_HEIGHT_WINDOWS
                 
             self._updated = True
 
         try:
-            self.__loadAtStartPathFilename = self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_LOAD_AT_START_PATH_FILENAME]
+            self.__loadAtStartPathFilename = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_LOAD_AT_START_PATH_FILENAME]
         except KeyError:
             self.__loadAtStartPathFilename = self.DEFAULT_LOAD_AT_START_PATH_FILENAME
             self._updated = True
 
         try:
-            self.__histoListVisibleSize = self.config[self.CONFIG_SECTION_LAYOUT][self.CONFIG_KEY_HISTO_LIST_VISIBLE_SIZE]
+            self.__fps = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_FPS]
         except KeyError:
-            self.__histoListVisibleSize = self.DEFAULT_CONFIG_HISTO_LIST_VISIBLE_SIZE
+            self.__fps = self.DEFAULT_FPS
             self._updated = True
 
         try:
-            self.__histoListItemHeight = self.config[self.CONFIG_SECTION_LAYOUT][self.CONFIG_KEY_HISTO_LIST_ITEM_HEIGHT]
+            self.__activeCellColor = self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_ACTIVE_CELL_COLOR]
         except KeyError:
-            if os.name == 'posix':
-                self.__histoListItemHeight = self.DEFAULT_CONFIG_KEY_HISTO_LIST_ITEM_HEIGHT_ANDROID
-            else:
-                self.__histoListItemHeight = self.DEFAULT_CONFIG_KEY_HISTO_LIST_ITEM_HEIGHT_WINDOWS
+            self.__activeCellColor = self.DEFAULT_ACTIVE_CELL_COLOR
             self._updated = True
 
         try:
-            self.__appSize = self.config[self.CONFIG_SECTION_LAYOUT][self.CONFIG_KEY_APP_SIZE]
+            self.__appSize = self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_APP_SIZE]
         except KeyError:
             self.__appSize = self.APP_SIZE_HALF
             self._updated = True
 
         try:
-            self.__appSizeHalfProportion = self.config[self.CONFIG_SECTION_LAYOUT][self.CONFIG_KEY_APP_SIZE_HALF_PROPORTION]
+            self.__appSizeHalfProportion = self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_APP_SIZE_HALF_PROPORTION]
         except KeyError:
             self.__appSizeHalfProportion = self.DEFAULT_CONFIG_KEY_APP_SIZE_HALF_PROPORTION
             self._updated = True
 
         try:
-            self.__referenceCurrency = self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_REFERENCE_CURRENCY]
+            self.__referenceCurrency = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_REFERENCE_CURRENCY]
         except KeyError:
             self.__referenceCurrency = self.DEFAULT_REFERENCE_CURRENCY
             self._updated = True
@@ -126,23 +148,24 @@ class ConfigurationManager:
         or updates the config file.
         :return: nothing
         '''
-        self.config[self.CONFIG_SECTION_GENERAL] = {}
-        self.config[self.CONFIG_SECTION_LAYOUT] = {}
-        self.localTimeZone = self.DEFAULT_TIME_ZONE
-        self.dateTimeFormat = self.DEFAULT_DATE_TIME_FORMAT
-        self.dateOnlyFormat = self.DEFAULT_DATE_ONLY_FORMAT
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT] = {}
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT] = {}
+        self.windowTitle = self.DEFAULT_WINDOW_TITLE
+        self.windowLocation = self.DEFAULT_WINDOW_LOCATION
+        self.gridWidth = self.DEFAULT_GRID_WIDTH_WINDOWS
 
         if os.name == 'posix':
-            self.dataPath = self.DEFAULT_DATA_PATH_ANDROID
-            self.histoListItemHeight = self.DEFAULT_CONFIG_KEY_HISTO_LIST_ITEM_HEIGHT_ANDROID
+            self.gridWidth = self.DEFAULT_GRID_WIDTH_ANDROID
+            self.gridHeight = self.DEFAULT_GRID_HEIGHT_ANDROID
             self.appSize = self.APP_SIZE_HALF
         else:
-            self.dataPath = self.DEFAULT_DATA_PATH_WINDOWS
-            self.histoListItemHeight = self.DEFAULT_CONFIG_KEY_HISTO_LIST_ITEM_HEIGHT_WINDOWS
+            self.gridWidth = self.DEFAULT_GRID_WIDTH_WINDOWS
+            self.gridHeight = self.DEFAULT_GRID_HEIGHT_WINDOWS
             self.appSize = self.APP_SIZE_FULL
 
+        self.activeCellColor = self.DEFAULT_ACTIVE_CELL_COLOR
         self.loadAtStartPathFilename = self.DEFAULT_LOAD_AT_START_PATH_FILENAME
-        self.histoListVisibleSize = self.DEFAULT_CONFIG_HISTO_LIST_VISIBLE_SIZE
+        self.fps = self.DEFAULT_FPS
         self.appSizeHalfProportion = self.DEFAULT_CONFIG_KEY_APP_SIZE_HALF_PROPORTION
         self.referenceCurrency = self.DEFAULT_REFERENCE_CURRENCY
         self._updated = True
@@ -151,42 +174,42 @@ class ConfigurationManager:
 
 
     @property
-    def localTimeZone(self):
-        return self.__localTimeZone
+    def windowTitle(self):
+        return self.__windowTitle
 
-    @localTimeZone.setter
-    def localTimeZone(self, timezoneStr):
-        self.__localTimeZone = timezoneStr
+    @windowTitle.setter
+    def windowTitle(self, timezoneStr):
+        self.__windowTitle = timezoneStr
         self._updated = True
 
 
     @property
-    def dateTimeFormat(self):
-        return self.__dateTimeFormat
+    def windowLocation(self):
+        return self.__windowLocation
 
-    @dateTimeFormat.setter
-    def dateTimeFormat(self, dateTimeFormatStr):
-        self.__dateTimeFormat = dateTimeFormatStr
+    @windowLocation.setter
+    def windowLocation(self, windowLocationStr):
+        self.__windowLocation = windowLocationStr
         self._updated = True
 
 
     @property
-    def dateOnlyFormat(self):
-        return self.__dateOnlyFormat
+    def gridWidth(self):
+        return self.__gridWidth
 
-    @dateOnlyFormat.setter
-    def dateOnlyFormat(self, dateOnlyFormatStr):
-        self.__dateOnlyFormat = dateOnlyFormatStr
+    @gridWidth.setter
+    def gridWidth(self, gridWidthStr):
+        self.__gridWidth = gridWidthStr
         self._updated = True
 
 
     @property
-    def dataPath(self):
-        return self.__dataPath
+    def gridHeight(self):
+        return self.__gridHeight
 
-    @dataPath.setter
-    def dataPath(self, dataPathStr):
-        self.__dataPath = dataPathStr
+    @gridHeight.setter
+    def gridHeight(self, gridHeightStr):
+        self.__gridHeight = gridHeightStr
         self._updated = True
 
 
@@ -201,22 +224,22 @@ class ConfigurationManager:
 
 
     @property
-    def histoListVisibleSize(self):
-        return self.__histoListVisibleSize
+    def fps(self):
+        return self.__fps
 
-    @histoListVisibleSize.setter
-    def histoListVisibleSize(self, histoListVisibleSizeStr):
-        self.__histoListVisibleSize = histoListVisibleSizeStr
+    @fps.setter
+    def fps(self, fpsStr):
+        self.__fps = fpsStr
         self._updated = True
 
 
     @property
-    def histoListItemHeight(self):
-        return self.__histoListItemHeight
+    def activeCellColor(self):
+        return self.__activeCellColor
 
-    @histoListItemHeight.setter
-    def histoListItemHeight(self, histoListItemHeightStr):
-        self.__histoListItemHeight = histoListItemHeightStr
+    @activeCellColor.setter
+    def activeCellColor(self, activeCellColorStr):
+        self.__activeCellColor = activeCellColorStr
         self._updated = True
 
 
@@ -254,16 +277,16 @@ class ConfigurationManager:
         if not self._updated:
             return
 
-        self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_TIME_ZONE] = self.localTimeZone
-        self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_DATE_TIME_FORMAT] = self.dateTimeFormat
-        self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_DATE_ONLY_FORMAT] = self.dateOnlyFormat
-        self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_DATA_PATH] = self.dataPath
-        self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_LOAD_AT_START_PATH_FILENAME] = self.loadAtStartPathFilename
-        self.config[self.CONFIG_SECTION_LAYOUT][self.CONFIG_KEY_HISTO_LIST_VISIBLE_SIZE] = self.histoListVisibleSize
-        self.config[self.CONFIG_SECTION_LAYOUT][self.CONFIG_KEY_HISTO_LIST_ITEM_HEIGHT] = self.histoListItemHeight
-        self.config[self.CONFIG_SECTION_LAYOUT][self.CONFIG_KEY_APP_SIZE] = self.appSize
-        self.config[self.CONFIG_SECTION_LAYOUT][self.CONFIG_KEY_APP_SIZE_HALF_PROPORTION] = self.appSizeHalfProportion
-        self.config[self.CONFIG_SECTION_GENERAL][self.CONFIG_KEY_REFERENCE_CURRENCY] = self.referenceCurrency
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_WINDOW_TITLE] = self.windowTitle
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_WINDOW_LOCATION] = self.windowLocation
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_WIDTH] = self.gridWidth
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_HEIGHT] = self.gridHeight
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_LOAD_AT_START_PATH_FILENAME] = self.loadAtStartPathFilename
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_FPS] = self.fps
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_ACTIVE_CELL_COLOR] = self.activeCellColor
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_APP_SIZE] = self.appSize
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_APP_SIZE_HALF_PROPORTION] = self.appSizeHalfProportion
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_REFERENCE_CURRENCY] = self.referenceCurrency
 
         self.config.write()
         
@@ -277,10 +300,10 @@ if __name__ == '__main__':
         FILE_PATH = 'c:\\temp\\cryptopricer.ini'
         
     cm = ConfigurationManager(FILE_PATH)
-    print(cm.localTimeZone)
-    print(cm.dateTimeFormat)
-    print(cm.dateOnlyFormat)
-    print(cm.dataPath)
+    print(cm.windowTitle)
+    print(cm.windowLocation)
+    print(cm.gridWidth)
+    print(cm.gridHeight)
     print("loadAtStartPathFilename: '" + cm.loadAtStartPathFilename + "'")
     import pytz
     print(sorted(pytz.all_timezones_set))

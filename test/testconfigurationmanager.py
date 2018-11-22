@@ -18,21 +18,20 @@ class TestConfigurationManager(unittest.TestCase):
 
     def testConfigurationManagerInstanciation(self):
         self.configMgr = ConfigurationManager(self.filePath)
-        self.assertEqual(self.configMgr.localTimeZone, 'Europe/Zurich')
-        self.assertEqual(self.configMgr.dateTimeFormat, 'DD/MM/YY HH:mm')
-        self.assertEqual(self.configMgr.dateOnlyFormat, 'DD/MM/YY')
-        
+        self.assertEqual(self.configMgr.windowTitle, 'Draw grid')
+        self.assertEqual(self.configMgr.windowLocation, '400, 20')
+        self.assertEqual(self.configMgr.gridWidth, '791')
+        self.assertEqual(self.configMgr.fps, '20')
+
         if os.name == 'posix':
-            self.assertEqual(self.configMgr.dataPath, '/sdcard/CryptoPricerData')
+            self.assertEqual(self.configMgr.gridHeight, '791') 
             self.assertEqual(self.configMgr.appSize, 'Half')
-            self.assertEqual(self.configMgr.histoListItemHeight, '90')
         else:
-            self.assertEqual(self.configMgr.dataPath, 'c:\\temp')
+            self.assertEqual(self.configMgr.gridHeight, '791')  
             self.assertEqual(self.configMgr.appSize, 'Full')
-            self.assertEqual(self.configMgr.histoListItemHeight, '35')
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, '')
-        self.assertEqual(self.configMgr.histoListVisibleSize, '3')
+        self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.appSizeHalfProportion, '0.56')
         self.assertEqual(self.configMgr.referenceCurrency, 'USD')
 
@@ -40,21 +39,20 @@ class TestConfigurationManager(unittest.TestCase):
     def testConfigurationManagerInstanciationNoConfigFile(self):
         os.remove(self.filePath)
         self.configMgr = ConfigurationManager(self.filePath)
-        self.assertEqual(self.configMgr.localTimeZone, 'Europe/Zurich')
-        self.assertEqual(self.configMgr.dateTimeFormat, 'DD/MM/YY HH:mm')
-        self.assertEqual(self.configMgr.dateOnlyFormat, 'DD/MM/YY')
+        self.assertEqual(self.configMgr.windowTitle, 'Draw grid')
+        self.assertEqual(self.configMgr.windowLocation, '400, 20')
+        self.assertEqual(self.configMgr.gridWidth, '791')
+        self.assertEqual(self.configMgr.fps, '20')
 
         if os.name == 'posix':
-            self.assertEqual(self.configMgr.dataPath, '/sdcard/CryptoPricerData')
+            self.assertEqual(self.configMgr.gridHeight, '791')
             self.assertEqual(self.configMgr.appSize, 'Half')
-            self.assertEqual(self.configMgr.histoListItemHeight, '90')
         else:
-            self.assertEqual(self.configMgr.dataPath, 'c:\\temp')
+            self.assertEqual(self.configMgr.gridHeight, '791')
             self.assertEqual(self.configMgr.appSize, 'Full')
-            self.assertEqual(self.configMgr.histoListItemHeight, '35')
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, '')
-        self.assertEqual(self.configMgr.histoListVisibleSize, '3')
+        self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.appSizeHalfProportion, '0.56')
         self.assertEqual(self.configMgr.referenceCurrency, 'USD')
 
@@ -62,21 +60,20 @@ class TestConfigurationManager(unittest.TestCase):
     def testConfigurationManagerInstanciationEmptyConfigFile(self):
         open(self.filePath, 'w').close()
         self.configMgr = ConfigurationManager(self.filePath)
-        self.assertEqual(self.configMgr.localTimeZone, 'Europe/Zurich')
-        self.assertEqual(self.configMgr.dateTimeFormat, 'DD/MM/YY HH:mm')
-        self.assertEqual(self.configMgr.dateOnlyFormat, 'DD/MM/YY')
+        self.assertEqual(self.configMgr.windowTitle, 'Draw grid')
+        self.assertEqual(self.configMgr.windowLocation, '400, 20')
+        self.assertEqual(self.configMgr.gridWidth, '791')
+        self.assertEqual(self.configMgr.fps, '20')
 
         if os.name == 'posix':
-            self.assertEqual(self.configMgr.dataPath, '/sdcard/CryptoPricerData')
+            self.assertEqual(self.configMgr.gridHeight, '791')
             self.assertEqual(self.configMgr.appSize, 'Half')
-            self.assertEqual(self.configMgr.histoListItemHeight, '90')
         else:
-            self.assertEqual(self.configMgr.dataPath, 'c:\\temp')
+            self.assertEqual(self.configMgr.gridHeight, '791')
             self.assertEqual(self.configMgr.appSize, 'Full')
-            self.assertEqual(self.configMgr.histoListItemHeight, '35')
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, '')
-        self.assertEqual(self.configMgr.histoListVisibleSize, '3')
+        self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.appSizeHalfProportion, '0.56')
         self.assertEqual(self.configMgr.referenceCurrency, 'USD')
 
@@ -91,17 +88,17 @@ class TestConfigurationManager(unittest.TestCase):
             configFile.write(''.join(lines[0:1] + lines[2:]))
 
         self.configMgr = ConfigurationManager(self.filePath)
-        self.assertEqual(self.configMgr.localTimeZone, 'Europe/Zurich')
-        self.assertEqual(self.configMgr.dateTimeFormat, 'DD/MM/YY HH:mm')
-        self.assertEqual(self.configMgr.dateOnlyFormat, 'DD/MM/YY')
+        self.assertEqual(self.configMgr.windowTitle, 'Draw grid')
+        self.assertEqual(self.configMgr.windowLocation, '400, 20')
+        self.assertEqual(self.configMgr.gridWidth, '791')
 
         if os.name == 'posix':
-            self.assertEqual(self.configMgr.dataPath, '/sdcard/CryptoPricerData')
+            self.assertEqual(self.configMgr.gridHeight, '791')
         else:
-            self.assertEqual(self.configMgr.dataPath, 'c:\\temp')
+            self.assertEqual(self.configMgr.gridHeight, '791')
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, '')
-        self.assertEqual(self.configMgr.histoListVisibleSize, '3')
+        self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.appSizeHalfProportion, '0.56')
         self.assertEqual(self.configMgr.referenceCurrency, 'USD')
 

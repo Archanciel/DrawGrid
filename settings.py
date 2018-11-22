@@ -1,6 +1,6 @@
 # game options/settings
-TITLE = "Draw grid"
-WINDOWS_LOCATION = '400, 20' # 400 enables to read output in Pycharm console window !
+WINDOW_TITLE = "Draw grid"
+WINDOW_LOCATION = '400, 20' # 400 enables to read output in Pycharm console window !
 GRID_WIDTH = 791 # grid is always a square !
 GRID_HEIGHT = 791 # grid is always a square !
 FPS = 20
@@ -9,7 +9,7 @@ FPS = 20
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
-GREEN = (0, 255, 0)
+ACTIVE_CELL_COLOR = (0, 255, 0) # green
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 

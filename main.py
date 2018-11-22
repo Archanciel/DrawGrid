@@ -21,11 +21,11 @@ class Game:
         Initializes game window, etc.
         '''
         # setting Pygame window position
-        os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
+        os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOW_LOCATION
 
         pg.init()
         self.screen = pg.display.set_mode((GRID_WIDTH, GRID_HEIGHT))
-        pg.display.set_caption(TITLE)
+        pg.display.set_caption(WINDOW_TITLE)
         self.clock = pg.time.Clock()
         self.running = True
 

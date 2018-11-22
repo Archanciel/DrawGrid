@@ -165,8 +165,8 @@ class GridView():
                         drawnedCellYCoord, drawnedCellHeight = Cell.computeBorderIndependentCellYCoord(self, row), self.cellSize
 
                     pg.draw.rect(self.surface,
-                                     GREEN,
-                                     [drawnedCellXCoord - CELL_SIZE_OFFSET,
+                                 ACTIVE_CELL_COLOR,
+                                 [drawnedCellXCoord - CELL_SIZE_OFFSET,
                                       drawnedCellYCoord - CELL_SIZE_OFFSET,
                                       drawnedCellWidth,
                                       drawnedCellHeight])
