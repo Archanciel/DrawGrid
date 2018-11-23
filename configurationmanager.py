@@ -35,7 +35,8 @@ class ConfigurationManager:
 
     # grid constants
 
-    GRID_LINE_WIDTH_TUPLE = (1, 0)
+    CONFIG_KEY_GRID_LINE_WIDTH_TUPLE = "Grid line width tuple"
+    DEFAULT_GRID_LINE_WIDTH_TUPLE = "1, 0"
     # GRID_LINE_WIDTH_TUPLE = (2, 0)
     # GRID_LINE_WIDTH_TUPLE = (3, 1)
     # GRID_LINE_WIDTH_TUPLE = (4, 1)
@@ -44,18 +45,25 @@ class ConfigurationManager:
     # GRID_LINE_WIDTH_TUPLE = (7, 3)
     # GRID_LINE_WIDTH_TUPLE = (8, 3)
 
-    GRID_LINE_WIDTH = GRID_LINE_WIDTH_TUPLE[0]
-    CELL_SIZE_OFFSET = GRID_LINE_WIDTH_TUPLE[1] # constant used when drawing an active cell to correct an unexplained
-                                                # error which introduce blank pixels at top and left of the drawned
-                                                # rectangle when the grid line width is bigger than 2 !
+    #    GRID_LINE_WIDTH = GRID_LINE_WIDTH_TUPLE[0]
+    #    CELL_SIZE_OFFSET = GRID_LINE_WIDTH_TUPLE[1] # constant used when drawing an active cell to correct an unexplained
+    # error which introduce blank pixels at top and left of the drawned
+    # rectangle when the grid line width is bigger than 2 !
 
-    DEFAULT_CELL_SIZE = 15  # 15 Windows, 35 Android
+    CONFIG_KEY_CELL_SIZE = "Default cell size"
 
     # Since one cell can occupy a minimum of 1 px and the grid line width
     # is 1 px at the minimum, 2 cells will require at least 1 + 1 + 1 + 1 + 1 = 5 px.
     # 3 cells require at least 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
     # n cells require at least 1 + (n * 2) px. This explains that the smallest possible
     # cell constant SMALLEST_CELL_REQUIRED_PX_NUMBER is 2 pixels.
+    DEFAULT_CELL_SIZE_WINDOWS = "15"
+    DEFAULT_CELL_SIZE_ANDROID = "35"
+
+    CONFIG_KEY_GRID_LINE_WIDTH_TUPLE_FULL = "Grid line width tuple"
+    DEFAULT_GRID_LINE_WIDTH_TUPLE_FULL = "1, 0"
+
+
     SMALLEST_CELL_REQUIRED_PX_NUMBER = 2
 
     # Cell size under which the grid axis label zone is no longer displayed
@@ -73,15 +81,6 @@ class ConfigurationManager:
 
     CONFIG_KEY_LOAD_AT_START_PATH_FILENAME = 'loadatstartpathfilename'
     DEFAULT_LOAD_AT_START_PATH_FILENAME = 'griddata.csv'
-
-    CONFIG_KEY_APP_SIZE = 'defaultappsize'
-    DEFAULT_CONFIG_KEY_APP_SIZE_HALF_PROPORTION = '0.56'
-
-    DEFAULT_CONFIG_KEY_ACTIVE_CELL_COLOR_ANDROID = '90'
-
-    CONFIG_KEY_APP_SIZE_HALF_PROPORTION = 'appsizehalfproportion'
-    APP_SIZE_HALF = 'Half'
-    APP_SIZE_FULL = 'Full'
 
     def __init__(self, filename):
         self.config = ConfigObj(filename)
@@ -140,15 +139,18 @@ class ConfigurationManager:
             self._updated = True
 
         try:
-            self.__appSize = self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_APP_SIZE]
+            self.__gridLineWidthTuple = self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE]
         except KeyError:
-            self.__appSize = self.APP_SIZE_HALF
+            self.__gridLineWidthTuple = self.DEFAULT_GRID_LINE_WIDTH_TUPLE
             self._updated = True
 
         try:
-            self.__appSizeHalfProportion = self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_APP_SIZE_HALF_PROPORTION]
+            self.__defaultCellSize = self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_CELL_SIZE]
         except KeyError:
-            self.__appSizeHalfProportion = self.DEFAULT_CONFIG_KEY_APP_SIZE_HALF_PROPORTION
+            if os.name == 'posix':
+                self.__defaultCellSize = self.DEFAULT_CELL_SIZE_ANDROID
+            else:
+                self.__defaultCellSize = self.DEFAULT_CELL_SIZE_WINDOWS
             self._updated = True
 
         try:
@@ -172,20 +174,20 @@ class ConfigurationManager:
         self.windowTitle = self.DEFAULT_WINDOW_TITLE
         self.windowLocation = self.DEFAULT_WINDOW_LOCATION
         self.gridWidth = self.DEFAULT_GRID_WIDTH_WINDOWS
+        self.gridLineWidthTuple = self.DEFAULT_GRID_LINE_WIDTH_TUPLE
 
         if os.name == 'posix':
             self.gridWidth = self.DEFAULT_GRID_WIDTH_ANDROID
             self.gridHeight = self.DEFAULT_GRID_HEIGHT_ANDROID
-            self.appSize = self.APP_SIZE_HALF
+            self.defaultCellSize = self.DEFAULT_CELL_SIZE_ANDROID
         else:
             self.gridWidth = self.DEFAULT_GRID_WIDTH_WINDOWS
             self.gridHeight = self.DEFAULT_GRID_HEIGHT_WINDOWS
-            self.appSize = self.APP_SIZE_FULL
+            self.defaultCellSize = self.DEFAULT_CELL_SIZE_WINDOWS
 
         self.activeCellColor = self.DEFAULT_ACTIVE_CELL_COLOR
         self.loadAtStartPathFilename = self.DEFAULT_LOAD_AT_START_PATH_FILENAME
         self.fps = self.DEFAULT_FPS
-        self.appSizeHalfProportion = self.DEFAULT_CONFIG_KEY_APP_SIZE_HALF_PROPORTION
         self.referenceCurrency = self.DEFAULT_REFERENCE_CURRENCY
         self._updated = True
 
@@ -263,22 +265,22 @@ class ConfigurationManager:
 
 
     @property
-    def appSize(self):
-        return self.__appSize
+    def gridLineWidthTuple(self):
+        return self.__gridLineWidthTuple
 
-    @appSize.setter
-    def appSize(self, appSizeStr):
-        self.__appSize = appSizeStr
+    @gridLineWidthTuple.setter
+    def gridLineWidthTuple(self, gridLineWidthTupleStr):
+        self.__gridLineWidthTuple = gridLineWidthTupleStr
         self._updated = True
 
 
     @property
-    def appSizeHalfProportion(self):
-        return self.__appSizeHalfProportion
+    def defaultCellSize(self):
+        return self.__defaultCellSize
 
-    @appSizeHalfProportion.setter
-    def appSizeHalfProportion(self, appSizeHalfProportionStr):
-        self.__appSizeHalfProportion = appSizeHalfProportionStr
+    @defaultCellSize.setter
+    def defaultCellSize(self, defaultCellSizeStr):
+        self.__defaultCellSize = defaultCellSizeStr
         self._updated = True
 
 
@@ -303,8 +305,8 @@ class ConfigurationManager:
         self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_LOAD_AT_START_PATH_FILENAME] = self.loadAtStartPathFilename
         self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_FPS] = self.fps
         self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_ACTIVE_CELL_COLOR] = self.activeCellColor
-        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_APP_SIZE] = self.appSize
-        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_APP_SIZE_HALF_PROPORTION] = self.appSizeHalfProportion
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE] = self.gridLineWidthTuple
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_CELL_SIZE] = self.defaultCellSize
         self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_REFERENCE_CURRENCY] = self.referenceCurrency
 
         self.config.write()
