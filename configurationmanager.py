@@ -13,6 +13,25 @@ class ConfigurationManager:
     CONFIG_KEY_WINDOW_TITLE = "Window title"
     DEFAULT_WINDOW_TITLE = "Draw grid"
 
+    CONFIG_KEY_WINDOW_LOCATION = "Window location"  # 400 enables to read output in Pycharm console window !
+    DEFAULT_WINDOW_LOCATION = "400, 20"  # 400 enables to read output in Pycharm console window !
+
+    CONFIG_KEY_GRID_WIDTH = "Grid width"  # grid is always a square !
+    DEFAULT_GRID_WIDTH_ANDROID = "791"  # grid is always a square !
+    DEFAULT_GRID_WIDTH_WINDOWS = "791"  # grid is always a square !
+
+    CONFIG_KEY_GRID_HEIGHT = "Grid height"  # grid is always a square !
+    DEFAULT_GRID_HEIGHT_ANDROID = "791"  # grid is always a square !
+    DEFAULT_GRID_HEIGHT_WINDOWS = "791"  # grid is always a square !
+
+    CONFIG_KEY_FPS = "Frames per second (FPS)"
+    DEFAULT_FPS = "20"
+
+    CONFIG_SECTION_GRID_LAYOUT = "Grid layout"
+
+    # color constants
+    CONFIG_KEY_ACTIVE_CELL_COLOR = "Active cell color"
+    DEFAULT_ACTIVE_CELL_COLOR = "0, 255, 0"
 
     # grid constants
 
@@ -53,7 +72,7 @@ class ConfigurationManager:
     DEFAULT_REFERENCE_CURRENCY = 'USD'
 
     CONFIG_KEY_LOAD_AT_START_PATH_FILENAME = 'loadatstartpathfilename'
-    DEFAULT_LOAD_AT_START_PATH_FILENAME = ''
+    DEFAULT_LOAD_AT_START_PATH_FILENAME = 'griddata.csv'
 
     CONFIG_KEY_APP_SIZE = 'defaultappsize'
     DEFAULT_CONFIG_KEY_APP_SIZE_HALF_PROPORTION = '0.56'

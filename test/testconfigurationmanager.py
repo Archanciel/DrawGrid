@@ -30,7 +30,7 @@ class TestConfigurationManager(unittest.TestCase):
             self.assertEqual(self.configMgr.gridHeight, '791')  
             self.assertEqual(self.configMgr.appSize, 'Full')
 
-        self.assertEqual(self.configMgr.loadAtStartPathFilename, '')
+        self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.appSizeHalfProportion, '0.56')
         self.assertEqual(self.configMgr.referenceCurrency, 'USD')
@@ -51,7 +51,7 @@ class TestConfigurationManager(unittest.TestCase):
             self.assertEqual(self.configMgr.gridHeight, '791')
             self.assertEqual(self.configMgr.appSize, 'Full')
 
-        self.assertEqual(self.configMgr.loadAtStartPathFilename, '')
+        self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.appSizeHalfProportion, '0.56')
         self.assertEqual(self.configMgr.referenceCurrency, 'USD')
@@ -72,7 +72,7 @@ class TestConfigurationManager(unittest.TestCase):
             self.assertEqual(self.configMgr.gridHeight, '791')
             self.assertEqual(self.configMgr.appSize, 'Full')
 
-        self.assertEqual(self.configMgr.loadAtStartPathFilename, '')
+        self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.appSizeHalfProportion, '0.56')
         self.assertEqual(self.configMgr.referenceCurrency, 'USD')
@@ -97,7 +97,7 @@ class TestConfigurationManager(unittest.TestCase):
         else:
             self.assertEqual(self.configMgr.gridHeight, '791')
 
-        self.assertEqual(self.configMgr.loadAtStartPathFilename, '')
+        self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.appSizeHalfProportion, '0.56')
         self.assertEqual(self.configMgr.referenceCurrency, 'USD')
