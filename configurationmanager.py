@@ -105,9 +105,9 @@ class ConfigurationManager:
             self.__gridWidth = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_WIDTH]
         except KeyError:
             if os.name == 'posix':
-                self.__gridWidth = self.DEFAULT_GRID_WIDTHe_ANDROID
+                self.__gridWidth = self.DEFAULT_GRID_WIDTH_ANDROID
             else:
-                self.__gridWidth = self.DEFAULT_GRID_WIDTHe_WINDOWS
+                self.__gridWidth = self.DEFAULT_GRID_WIDTH_WINDOWS
             self._updated = True
 
         try:
@@ -139,7 +139,8 @@ class ConfigurationManager:
             self._updated = True
 
         try:
-            self.__gridLineWidthTuple = self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE]
+            self.__gridLineWidthTuple = self.config[self.CONFIG_SECTION_GRID_LAYOUT][
+                self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE]
         except KeyError:
             self.__gridLineWidthTuple = self.DEFAULT_GRID_LINE_WIDTH_TUPLE
             self._updated = True
@@ -308,6 +309,23 @@ class ConfigurationManager:
         self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE] = self.gridLineWidthTuple
         self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_CELL_SIZE] = self.defaultCellSize
         self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_REFERENCE_CURRENCY] = self.referenceCurrency
+
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT].comments = {
+            self.CONFIG_KEY_CELL_SIZE: [""],
+            self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE:
+                ["Other possible values for " + self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE + ":",
+                 "(2, 0), (3, 1), (4, 1), (5, 2), (6, 2), (7, 3), (8, 3)",
+                 "The second value in the tuple is a constant used when drawing an active cell to correct",
+                 "an unexplained error which introduce blank pixels at top and left of the drawned",
+                 "rectangle when the grid line width is bigger than 2 !"],
+            self.CONFIG_KEY_ACTIVE_CELL_COLOR: []
+        }
+
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT].inline_comments = {
+            self.CONFIG_KEY_CELL_SIZE: "on Windows: 15, on Android: 35",
+            self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE: None,
+            self.CONFIG_KEY_ACTIVE_CELL_COLOR: None
+        }
 
         self.config.write()
         
