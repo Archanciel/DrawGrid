@@ -39,7 +39,7 @@ DEFAULT_CELL_SIZE = 15 # 15 Windows, 35 Android
 SMALLEST_CELL_REQUIRED_PX_NUMBER = 2
 
 # Cell size under which the grid axis label zone is no longer displayed
-AXIS_HIDE_CELL_SIZE_LIMIT = 11
+AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT = 11
 
 
 GRID_COORD_MARGIN_SIZE = 20 #20 Windows, 40 Android

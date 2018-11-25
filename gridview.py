@@ -184,7 +184,7 @@ class GridView():
         if self.cellSize >= self.surface.get_height():
             self.cellSize -= delta
 
-        if self.cellSize > AXIS_HIDE_CELL_SIZE_LIMIT:
+        if self.cellSize > AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT:
             self.drawAxisLabel = True
             self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
 
@@ -209,7 +209,7 @@ class GridView():
 
         if self.cellSize > SMALLEST_CELL_REQUIRED_PX_NUMBER:
             self.cellSize -= delta
-            if self.cellSize <= AXIS_HIDE_CELL_SIZE_LIMIT:
+            if self.cellSize <= AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT:
                 self.drawAxisLabel = False
                 self.gridCoordMargin = 0
 

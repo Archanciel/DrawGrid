@@ -36,7 +36,7 @@ class TestConfigurationManager(unittest.TestCase):
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
-        self.assertEqual(self.configMgr.referenceCurrency, 'USD')
+        self.assertEqual(self.configMgr.axisLegendHideCellSizeLimit, '11')
 
 
     def testConfigurationManagerInstanciationNoConfigFile(self):
@@ -60,7 +60,7 @@ class TestConfigurationManager(unittest.TestCase):
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
-        self.assertEqual(self.configMgr.referenceCurrency, 'USD')
+        self.assertEqual(self.configMgr.axisLegendHideCellSizeLimit, '11')
 
 
     def testConfigurationManagerInstanciationEmptyConfigFile(self):
@@ -84,7 +84,7 @@ class TestConfigurationManager(unittest.TestCase):
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
-        self.assertEqual(self.configMgr.referenceCurrency, 'USD')
+        self.assertEqual(self.configMgr.axisLegendHideCellSizeLimit, '11')
 
 
     def testConfigurationManagerInstanciationOneMissingKey(self):
@@ -114,7 +114,7 @@ class TestConfigurationManager(unittest.TestCase):
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
-        self.assertEqual(self.configMgr.referenceCurrency, 'USD')
+        self.assertEqual(self.configMgr.axisLegendHideCellSizeLimit, '11')
 
 
 if __name__ == '__main__':
