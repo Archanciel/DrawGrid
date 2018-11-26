@@ -36,7 +36,10 @@ class TestConfigurationManager(unittest.TestCase):
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
-        self.assertEqual(self.configMgr.axisLegendHideCellSizeLimit, '11')
+        self.assertEqual(self.configMgr.gridCoordMarginHideCellSizeLimit, '11')
+        self.assertEqual(self.configMgr.gridCoordMarginSize, '20')
+        self.assertEqual(self.configMgr.gridAxisFontSize, '12')
+        self.assertEqual(self.configMgr.gridMoveIncrement, '1')
 
 
     def testConfigurationManagerInstanciationNoConfigFile(self):
@@ -60,7 +63,10 @@ class TestConfigurationManager(unittest.TestCase):
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
-        self.assertEqual(self.configMgr.axisLegendHideCellSizeLimit, '11')
+        self.assertEqual(self.configMgr.gridCoordMarginHideCellSizeLimit, '11')
+        self.assertEqual(self.configMgr.gridCoordMarginSize, '20')
+        self.assertEqual(self.configMgr.gridAxisFontSize, '12')
+        self.assertEqual(self.configMgr.gridMoveIncrement, '1')
 
 
     def testConfigurationManagerInstanciationEmptyConfigFile(self):
@@ -84,7 +90,10 @@ class TestConfigurationManager(unittest.TestCase):
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
-        self.assertEqual(self.configMgr.axisLegendHideCellSizeLimit, '11')
+        self.assertEqual(self.configMgr.gridCoordMarginHideCellSizeLimit, '11')
+        self.assertEqual(self.configMgr.gridCoordMarginSize, '20')
+        self.assertEqual(self.configMgr.gridAxisFontSize, '12')
+        self.assertEqual(self.configMgr.gridMoveIncrement, '1')
 
 
     def testConfigurationManagerInstanciationOneMissingKey(self):
@@ -114,7 +123,10 @@ class TestConfigurationManager(unittest.TestCase):
 
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
-        self.assertEqual(self.configMgr.axisLegendHideCellSizeLimit, '11')
+        self.assertEqual(self.configMgr.gridCoordMarginHideCellSizeLimit, '11')
+        self.assertEqual(self.configMgr.gridCoordMarginSize, '20')
+        self.assertEqual(self.configMgr.gridAxisFontSize, '12')
+        self.assertEqual(self.configMgr.gridMoveIncrement, '1')
 
 
 if __name__ == '__main__':

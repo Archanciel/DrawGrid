@@ -67,15 +67,17 @@ class ConfigurationManager:
     SMALLEST_CELL_REQUIRED_PX_NUMBER = 2
 
     # Cell size under which the grid axis label zone is no longer displayed
-    CONFIG_KEY_AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT = "Grid axis hide cell size limit"
-    DEFAULT_AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT = '11'
+    CONFIG_KEY_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT = "Grid coord margin hide cell size limit"
+    DEFAULT_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT = '11'
 
-    GRID_COORD_MARGIN_SIZE = '20'  # 20 Windows, 40 Android
-    GRID_AXIS_FONT_SIZE = '12'
+    CONFIG_KEY_GRID_COORD_MARGIN_SIZE = 'Grid coord margin size'  # 20 Windows, 40 Android
+    DEFAULT_GRID_COORD_MARGIN_SIZE = '20'  # 20 Windows, 40 Android
 
-    GRID_MOVE_INCREMENT = '1'
+    CONFIG_KEY_GRID_AXIS_FONT_SIZE = 'Grid axis font size'
+    DEFAULT_GRID_AXIS_FONT_SIZE = '12'
 
-    DEFAULT_DATA_PATH_IOS = '~/Documents'
+    CONFIG_KEY_GRID_MOVE_INCREMENT = 'Grid move increment'
+    DEFAULT_GRID_MOVE_INCREMENT = '1'
 
     CONFIG_KEY_LOAD_AT_START_PATH_FILENAME = 'loadatstartpathfilename'
     DEFAULT_LOAD_AT_START_PATH_FILENAME = 'griddata.csv'
@@ -124,9 +126,27 @@ class ConfigurationManager:
             self._updated = True
 
         try:
-            self.__axisLegendHideCellSizeLimit = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT]
+            self.__gridCoordMarginHideCellSizeLimit = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT]
         except KeyError:
-            self.__axisLegendHideCellSizeLimit = self.DEFAULT_AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT
+            self.__gridCoordMarginHideCellSizeLimit = self.DEFAULT_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT
+            self._updated = True
+
+        try:
+            self.__gridCoordMarginSize = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_COORD_MARGIN_SIZE]
+        except KeyError:
+            self.__gridCoordMarginSize = self.DEFAULT_GRID_COORD_MARGIN_SIZE
+            self._updated = True
+
+        try:
+            self.__gridAxisFontSize = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_AXIS_FONT_SIZE]
+        except KeyError:
+            self.__gridAxisFontSize = self.DEFAULT_GRID_AXIS_FONT_SIZE
+            self._updated = True
+
+        try:
+            self.__gridMoveIncrement = self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_MOVE_INCREMENT]
+        except KeyError:
+            self.__gridMoveIncrement = self.DEFAULT_GRID_MOVE_INCREMENT
             self._updated = True
 
         try:
@@ -187,7 +207,10 @@ class ConfigurationManager:
         self.activeCellColor = self.DEFAULT_ACTIVE_CELL_COLOR
         self.loadAtStartPathFilename = self.DEFAULT_LOAD_AT_START_PATH_FILENAME
         self.fps = self.DEFAULT_FPS
-        self.axisLegendHideCellSizeLimit = self.DEFAULT_AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT
+        self.gridCoordMarginHideCellSizeLimit = self.DEFAULT_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT
+        self.gridCoordMarginSize = self.DEFAULT_GRID_COORD_MARGIN_SIZE
+        self.gridAxisFontSize = self.DEFAULT_GRID_AXIS_FONT_SIZE
+        self.gridMoveIncrement = self.DEFAULT_GRID_MOVE_INCREMENT
         self._updated = True
 
         self.storeConfig()
@@ -284,12 +307,42 @@ class ConfigurationManager:
 
 
     @property
-    def axisLegendHideCellSizeLimit(self):
-        return self.__axisLegendHideCellSizeLimit
+    def gridCoordMarginHideCellSizeLimit(self):
+        return self.__gridCoordMarginHideCellSizeLimit
 
-    @axisLegendHideCellSizeLimit.setter
-    def axisLegendHideCellSizeLimit(self, axisLegendHideCellSizeLimitStr):
-        self.__axisLegendHideCellSizeLimit = axisLegendHideCellSizeLimitStr
+    @gridCoordMarginHideCellSizeLimit.setter
+    def gridCoordMarginHideCellSizeLimit(self, gridCoordMarginHideCellSizeLimitStr):
+        self.__gridCoordMarginHideCellSizeLimit = gridCoordMarginHideCellSizeLimitStr
+        self._updated = True
+
+
+    @property
+    def gridCoordMarginSize(self):
+        return self.__gridCoordMarginSize
+
+    @gridCoordMarginSize.setter
+    def gridCoordMarginSize(self, gridCoordMarginSizeStr):
+        self.__gridCoordMarginSize = gridCoordMarginSizeStr
+        self._updated = True
+
+
+    @property
+    def gridAxisFontSize(self):
+        return self.__gridAxisFontSize
+
+    @gridAxisFontSize.setter
+    def gridAxisFontSize(self, gridAxisFontSizeStr):
+        self.__gridAxisFontSize = gridAxisFontSizeStr
+        self._updated = True
+
+
+    @property
+    def gridMoveIncrement(self):
+        return self.__gridMoveIncrement
+
+    @gridMoveIncrement.setter
+    def gridMoveIncrement(self, gridMoveIncrementStr):
+        self.__gridMoveIncrement = gridMoveIncrementStr
         self._updated = True
 
 
@@ -306,7 +359,10 @@ class ConfigurationManager:
         self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_WIDTH] = self.gridWidth
         self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_HEIGHT] = self.gridHeight
         self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_FPS] = self.fps
-        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT] = self.axisLegendHideCellSizeLimit
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT] = self.gridCoordMarginHideCellSizeLimit
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_COORD_MARGIN_SIZE] = self.gridCoordMarginSize
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_AXIS_FONT_SIZE] = self.gridAxisFontSize
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_MOVE_INCREMENT] = self.gridMoveIncrement
 
         self.addCommentsToIniFile()
 
@@ -328,21 +384,27 @@ class ConfigurationManager:
             self.CONFIG_KEY_GRID_WIDTH: [""],
             self.CONFIG_KEY_GRID_HEIGHT: [""],
             self.CONFIG_KEY_FPS: [""],
-            self.CONFIG_KEY_AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT: ["",
-                                                               self.CONFIG_KEY_AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT + " explanation:",
-                                                               "Specifies under what cell size the grid view axis labels showing",
-                                                               "the cell x y coordinates are hidden. This value is used when zooming",
-                                                               "in or out"],
+            self.CONFIG_KEY_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT: ["",
+                                                               self.CONFIG_KEY_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT + " explanation:",
+                                                               "Specifies under what cell size the grid view coord horizontal and",
+                                                               "vertical margin showing the cell x y coordinates are hidden. This",
+                                                               "value is used when zooming in or out"],
+            self.CONFIG_KEY_GRID_COORD_MARGIN_SIZE: [""],
+            self.CONFIG_KEY_GRID_AXIS_FONT_SIZE: [""],
+            self.CONFIG_KEY_GRID_MOVE_INCREMENT: [""],
         }
 
         # add inline comments for each parm in the view layout section
         self.config[self.CONFIG_SECTION_VIEW_LAYOUT].inline_comments = {
             self.CONFIG_KEY_WINDOW_TITLE: None,
-            self.CONFIG_KEY_WINDOW_LOCATION: None,
-            self.CONFIG_KEY_GRID_WIDTH: None,
-            self.CONFIG_KEY_GRID_HEIGHT: None,
+            self.CONFIG_KEY_WINDOW_LOCATION: "value in pixel(s)",
+            self.CONFIG_KEY_GRID_WIDTH: "value in pixel(s)",
+            self.CONFIG_KEY_GRID_HEIGHT: "value in pixel(s)",
             self.CONFIG_KEY_FPS: None,
-            self.CONFIG_KEY_AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT: None,
+            self.CONFIG_KEY_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT: "value in pixel(s)",
+            self.CONFIG_KEY_GRID_COORD_MARGIN_SIZE: "value in pixel(s)",
+            self.CONFIG_KEY_GRID_AXIS_FONT_SIZE: None,
+            self.CONFIG_KEY_GRID_MOVE_INCREMENT: "value in pixel(s)",
         }
 
         # add empty comment before grid layout section which translates into a blank line before the section tag
@@ -377,8 +439,8 @@ class ConfigurationManager:
 
         # add inline comments for each parm in the grid layout section
         self.config[self.CONFIG_SECTION_GRID_LAYOUT].inline_comments = {
-            self.CONFIG_KEY_CELL_SIZE: "on Windows: 15, on Android: 35",
-            self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE: None,
+            self.CONFIG_KEY_CELL_SIZE: "value in pixels. On Windows: 15, on Android: 35",
+            self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE: "value in pixel(s)",
             self.CONFIG_KEY_ACTIVE_CELL_COLOR: None,
             self.CONFIG_KEY_LOAD_AT_START_PATH_FILENAME: None,
         }
