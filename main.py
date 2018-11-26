@@ -10,28 +10,29 @@ from tkinter import messagebox
 
 from configurationmanager import ConfigurationManager
 from gridview import GridView
-from settings import *
 import os
 
-I = 1
 
+EVENT_BUTTON_ONE = 1
+WHITE = (255, 255, 255)
 
 class Game:
     def __init__(self):
         '''
         Initializes game window, etc.
         '''
+        self.configMgr = ConfigurationManager('gridView.ini')
+
         # setting Pygame window position
-        os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOW_LOCATION
+        os.environ['SDL_VIDEO_WINDOW_POS'] = self.configMgr.windowLocation
 
         pg.init()
-        self.screen = pg.display.set_mode((GRID_WIDTH, GRID_HEIGHT))
-        pg.display.set_caption(WINDOW_TITLE)
+        self.screen = pg.display.set_mode((self.configMgr.gridWidth, self.configMgr.gridHeight))
+        pg.display.set_caption(self.configMgr.windowTitle)
         self.clock = pg.time.Clock()
         self.running = True
 
-        self.configMgr = ConfigurationManager('gridView.ini')
-        self.gridView = GridView(surface=self.screen, cellSize=DEFAULT_CELL_SIZE, gridDataFileName='gridData.csv', configManager=self.configMgr)
+        self.gridView = GridView(surface=self.screen, configManager=self.configMgr)
         self.buttonDownPressed = False
         self.dragging = False
         self.mouse_x_beg = 0
@@ -52,7 +53,7 @@ class Game:
         self.playing = True
 
         while self.playing:
-            self.clock.tick(FPS)
+            self.clock.tick(self.configMgr.fps)
             self.handleEvents()
             self.update()
             self.draw()
@@ -73,11 +74,11 @@ class Game:
 
             # handling mouse grid move
             elif event.type == pg.MOUSEBUTTONDOWN:
-                if event.button == I:
+                if event.button == EVENT_BUTTON_ONE:
                     self.buttonDownPressed = True
                     self.mouse_x_beg, self.mouse_y_beg = event.pos
             elif event.type == pg.MOUSEBUTTONUP:
-                if event.button == I:
+                if event.button == EVENT_BUTTON_ONE:
                     self.buttonDownPressed = False
                     if self.dragging:
                         self.dragging = False
@@ -123,13 +124,13 @@ class Game:
                 self.gridView.moveViewToRightEnd()
         else:
             if keys[pg.K_DOWN]:
-                self.gridView.moveViewDown(GRID_MOVE_INCREMENT)
+                self.gridView.moveViewDown(self.configMgr.gridMoveIncrement)
             if keys[pg.K_UP]:
-                self.gridView.moveViewUp(GRID_MOVE_INCREMENT)
+                self.gridView.moveViewUp(self.configMgr.gridMoveIncrement)
             if keys[pg.K_RIGHT]:
-                self.gridView.moveViewRight(GRID_MOVE_INCREMENT)
+                self.gridView.moveViewRight(self.configMgr.gridMoveIncrement)
             if keys[pg.K_LEFT]:
-                self.gridView.moveViewLeft(GRID_MOVE_INCREMENT)
+                self.gridView.moveViewLeft(self.configMgr.gridMoveIncrement)
 
     def update(self):
         '''

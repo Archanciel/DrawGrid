@@ -8,13 +8,13 @@ from bordercell import BorderCell
 
 class GridView():
 
-    def __init__(self, surface, cellSize, gridDataFileName, configManager):
+    def __init__(self, surface, configManager):
         self.changed = True
         self.surface = surface
-        self.cellSize = cellSize
         self.configMgr = configManager
-        self.gridDataMgr = GridDataManager(filename=gridDataFileName, configManager=self.configMgr)
-        self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
+        self.cellSize = configManager.defaultCellSize
+        self.gridDataMgr = GridDataManager(configManager=configManager)
+        self.gridCoordMargin = configManager.gridCoordMarginSize
 
         # varinst storing the number of row/col number that can be displayed in function
         # of the cell size which depends of the zoom in/out level. Their values are set
@@ -30,7 +30,7 @@ class GridView():
 
         self.cellValueGrid = None
 
-        self.font = pg.font.SysFont('arial', int(GRID_AXIS_FONT_SIZE), False)
+        self.font = pg.font.SysFont('arial', configManager.gridAxisFontSize, False)
         self.drawAxisLabel = True
 
         # when opening the grid windows, the visible part of the cells is set at the very

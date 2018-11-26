@@ -238,7 +238,7 @@ class ConfigurationManager:
 
     @property
     def gridWidth(self):
-        return self.__gridWidth
+        return int(self.__gridWidth)
 
     @gridWidth.setter
     def gridWidth(self, gridWidthStr):
@@ -248,7 +248,7 @@ class ConfigurationManager:
 
     @property
     def gridHeight(self):
-        return self.__gridHeight
+        return int(self.__gridHeight)
 
     @gridHeight.setter
     def gridHeight(self, gridHeightStr):
@@ -268,7 +268,7 @@ class ConfigurationManager:
 
     @property
     def fps(self):
-        return self.__fps
+        return int(self.__fps)
 
     @fps.setter
     def fps(self, fpsStr):
@@ -298,7 +298,7 @@ class ConfigurationManager:
 
     @property
     def defaultCellSize(self):
-        return self.__defaultCellSize
+        return int(self.__defaultCellSize)
 
     @defaultCellSize.setter
     def defaultCellSize(self, defaultCellSizeStr):
@@ -308,7 +308,7 @@ class ConfigurationManager:
 
     @property
     def gridCoordMarginHideCellSizeLimit(self):
-        return self.__gridCoordMarginHideCellSizeLimit
+        return int(self.__gridCoordMarginHideCellSizeLimit)
 
     @gridCoordMarginHideCellSizeLimit.setter
     def gridCoordMarginHideCellSizeLimit(self, gridCoordMarginHideCellSizeLimitStr):
@@ -318,7 +318,7 @@ class ConfigurationManager:
 
     @property
     def gridCoordMarginSize(self):
-        return self.__gridCoordMarginSize
+        return int(self.__gridCoordMarginSize)
 
     @gridCoordMarginSize.setter
     def gridCoordMarginSize(self, gridCoordMarginSizeStr):
@@ -328,7 +328,7 @@ class ConfigurationManager:
 
     @property
     def gridAxisFontSize(self):
-        return self.__gridAxisFontSize
+        return int(self.__gridAxisFontSize)
 
     @gridAxisFontSize.setter
     def gridAxisFontSize(self, gridAxisFontSizeStr):
@@ -338,7 +338,7 @@ class ConfigurationManager:
 
     @property
     def gridMoveIncrement(self):
-        return self.__gridMoveIncrement
+        return int(self.__gridMoveIncrement)
 
     @gridMoveIncrement.setter
     def gridMoveIncrement(self, gridMoveIncrementStr):
