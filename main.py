@@ -8,6 +8,7 @@ import pygame as pg
 from tkinter import *
 from tkinter import messagebox
 
+from configurationmanager import ConfigurationManager
 from gridview import GridView
 from settings import *
 import os
@@ -29,7 +30,8 @@ class Game:
         self.clock = pg.time.Clock()
         self.running = True
 
-        self.gridView = GridView(surface=self.screen, cellSize=DEFAULT_CELL_SIZE, gridDataFileName='gridData.csv')
+        self.configMgr = ConfigurationManager('gridView.ini')
+        self.gridView = GridView(surface=self.screen, cellSize=DEFAULT_CELL_SIZE, gridDataFileName='gridData.csv', configManager=self.configMgr)
         self.buttonDownPressed = False
         self.dragging = False
         self.mouse_x_beg = 0

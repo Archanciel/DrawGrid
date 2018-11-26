@@ -8,11 +8,12 @@ from bordercell import BorderCell
 
 class GridView():
 
-    def __init__(self, surface, cellSize, gridDataFileName):
+    def __init__(self, surface, cellSize, gridDataFileName, configManager):
         self.changed = True
         self.surface = surface
         self.cellSize = cellSize
-        self.gridDataMgr = GridDataManager(gridDataFileName)
+        self.configMgr = configManager
+        self.gridDataMgr = GridDataManager(filename=gridDataFileName, configManager=self.configMgr)
         self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
 
         # varinst storing the number of row/col number that can be displayed in function

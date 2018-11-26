@@ -5,7 +5,8 @@ class GridDataManager():
     This class reads/writes the internal grid data from/to a csv file.
     '''
 
-    def __init__(self, filename):
+    def __init__(self, filename, configManager):
+        self.configMgr = configManager
         self.filename = filename
 
     def writeGridData(self, gridData):
