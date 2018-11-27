@@ -1,10 +1,11 @@
 import pygame as pg
 
 from centercell import CenterCell
-from settings import *
 from griddatamanager import GridDataManager
 from cell import Cell
 from bordercell import BorderCell
+
+GRID_LINE_COLOR_BLACK = (0, 0, 0)
 
 class GridView():
 
@@ -13,6 +14,9 @@ class GridView():
         self.surface = surface
         self.configMgr = configManager
         self.cellSize = configManager.defaultCellSize
+        self.activeCellColor = configManager.activeCellColor
+        self.gridLineWidth = configManager.gridLineWidth
+        self.cellSizeOffset = configManager.cellSizeOffset
         self.gridDataMgr = GridDataManager(configManager=configManager)
         self.gridCoordMargin = configManager.gridCoordMarginSize
 
@@ -54,18 +58,18 @@ class GridView():
         number is function of the cell size which itself depends of the zoom in/out level
         (i.e. how many times the zoomIn()/zoomOut() methods were called.
         '''
-        self.gridViewDisplayableColNb = (self.surface.get_width() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
-        self.gridViewDisplayableRowNb = (self.surface.get_height() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
+        self.gridViewDisplayableColNb = (self.surface.get_width() - self.gridCoordMargin - self.gridLineWidth) // (self.cellSize + self.gridLineWidth)
+        self.gridViewDisplayableRowNb = (self.surface.get_height() - self.gridCoordMargin - self.gridLineWidth) // (self.cellSize + self.gridLineWidth)
 
     def draw(self):
         drawnedRowNumber = self.gridViewDisplayableRowNb
         row = 0
-        currentRowIndex = self.gridOffsetYPx // (self.cellSize + GRID_LINE_WIDTH)
+        currentRowIndex = self.gridOffsetYPx // (self.cellSize + self.gridLineWidth)
 
         # for all the lines, drawing the y axis line number label and the horizontal line itself
 
         while row <= drawnedRowNumber:
-            drawnedRowYCoord = self.gridCoordMargin - self.gridOffsetYPx + (currentRowIndex * (self.cellSize + GRID_LINE_WIDTH))
+            drawnedRowYCoord = self.gridCoordMargin - self.gridOffsetYPx + (currentRowIndex * (self.cellSize + self.gridLineWidth))
 
             if self.drawAxisLabel:
                 if drawnedRowYCoord < self.gridCoordMargin // 2:
@@ -96,16 +100,16 @@ class GridView():
                 drawnedRowNumber += 1
                 continue
             else:
-                pg.draw.line(self.surface, BLACK, (self.gridCoordMargin, drawnedRowYCoord), (self.surface.get_width(), drawnedRowYCoord), GRID_LINE_WIDTH)
+                pg.draw.line(self.surface, GRID_LINE_COLOR_BLACK, (self.gridCoordMargin, drawnedRowYCoord), (self.surface.get_width(), drawnedRowYCoord), self.gridLineWidth)
 
         # for all the columns, drawing the x axis column label and the column vertical line itself
 
         drawnedColNumber = self.gridViewDisplayableColNb
         col = 0
-        currentColIndex = self.gridOffsetXPx // (self.cellSize + GRID_LINE_WIDTH)
+        currentColIndex = self.gridOffsetXPx // (self.cellSize + self.gridLineWidth)
 
         while col <= drawnedColNumber:
-            drawnedColXCoord = self.gridCoordMargin - self.gridOffsetXPx + currentColIndex * (self.cellSize + GRID_LINE_WIDTH)
+            drawnedColXCoord = self.gridCoordMargin - self.gridOffsetXPx + currentColIndex * (self.cellSize + self.gridLineWidth)
 
             # handling column number label
 
@@ -137,7 +141,7 @@ class GridView():
                 drawnedColNumber += 1
                 continue
             else:
-                pg.draw.line(self.surface, BLACK, (drawnedColXCoord, self.gridCoordMargin), (drawnedColXCoord,self.surface.get_height()), GRID_LINE_WIDTH)
+                pg.draw.line(self.surface, GRID_LINE_COLOR_BLACK, (drawnedColXCoord, self.gridCoordMargin), (drawnedColXCoord, self.surface.get_height()), self.gridLineWidth)
 
         # drawing active cells
 
@@ -164,11 +168,10 @@ class GridView():
                         drawnedCellYCoord, drawnedCellHeight = BorderCell.computeBorderCellCoordAndSize(self, row, doComputeX=False)
                     else:
                         drawnedCellYCoord, drawnedCellHeight = Cell.computeBorderIndependentCellYCoord(self, row), self.cellSize
-
                     pg.draw.rect(self.surface,
-                                 ACTIVE_CELL_COLOR,
-                                 [drawnedCellXCoord - CELL_SIZE_OFFSET,
-                                      drawnedCellYCoord - CELL_SIZE_OFFSET,
+                                 self.activeCellColor,
+                                 [drawnedCellXCoord - self.cellSizeOffset,
+                                      drawnedCellYCoord - self.cellSizeOffset,
                                       drawnedCellWidth,
                                       drawnedCellHeight])
 
@@ -323,10 +326,10 @@ class GridView():
         :return: maximum possible horizontal offset in px
         '''
         # calculate the pixel number required to draw a cell plus one grid line
-        cellPlusSideWidthPxNumber = self.cellSize + GRID_LINE_WIDTH
+        cellPlusSideWidthPxNumber = self.cellSize + self.gridLineWidth
 
         # calculate how many cells can be drawned in the cell display zone
-        displayableCellNumber = (self.surface.get_width() - GRID_LINE_WIDTH - self.gridCoordMargin) / \
+        displayableCellNumber = (self.surface.get_width() - self.gridLineWidth - self.gridCoordMargin) / \
                                 cellPlusSideWidthPxNumber
 
         # determine the max allowed horizontal offset in pixels according to how many cells
@@ -334,7 +337,7 @@ class GridView():
         # we will get an out of range exception when we try to access a cell in the internal
         # cell table which does not exist (is beyhond the maximal available horizontal (x) cell number)
         maxAllowedHorizontalOffsetPx = ((self.horizontalMaxManagedCellNumber - displayableCellNumber) *
-                                        cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
+                                        cellPlusSideWidthPxNumber) - self.gridLineWidth
 
         return int(maxAllowedHorizontalOffsetPx)
 
@@ -346,10 +349,10 @@ class GridView():
         :return: maximum possible vertical offset in px
         '''
         # calculate the pixel number required to draw a cell plus one grid line
-        cellPlusSideHeightPxNumber = self.cellSize + GRID_LINE_WIDTH
+        cellPlusSideHeightPxNumber = self.cellSize + self.gridLineWidth
 
         # calculate how many cells can be drawned in the cell display zone
-        displayableCellNumber = (self.surface.get_height() - GRID_LINE_WIDTH - self.gridCoordMargin) / \
+        displayableCellNumber = (self.surface.get_height() - self.gridLineWidth - self.gridCoordMargin) / \
                                 cellPlusSideHeightPxNumber
 
         # determine the max allowed vertical offset in pixels according to how many cells
@@ -357,7 +360,7 @@ class GridView():
         # we will get an out of range exception when we try to access a cell in the internal
         # cell table which does not exist (is beyhond the maximal available vertical (y) cell number)
         maxAllowedVerticalOffsetPx = ((self.verticalMaxManagedCellNumber - displayableCellNumber) *
-                                        cellPlusSideHeightPxNumber) - GRID_LINE_WIDTH
+                                        cellPlusSideHeightPxNumber) - self.gridLineWidth
 
         return int(maxAllowedVerticalOffsetPx)
 
@@ -392,7 +395,7 @@ class GridView():
         column x index will become 1, then 2, etc, i.e. the positive value of the
         self.gridOffsetXPx integer divided by the current cell width + grid line width.
         '''
-        self.startDrawColIndex = self.gridOffsetXPx // (self.cellSize + GRID_LINE_WIDTH)
+        self.startDrawColIndex = self.gridOffsetXPx // (self.cellSize + self.gridLineWidth)
 
     def updateStartDrawRowIndex(self):
         '''
@@ -404,12 +407,12 @@ class GridView():
         row y index will become 1, then 2, etc, i.e. the positive value of the
         self.gridOffsetYPx integer divided by the current cell height + grid line width.
         '''
-        self.startDrawRowIndex = self.gridOffsetYPx // (self.cellSize + GRID_LINE_WIDTH)
+        self.startDrawRowIndex = self.gridOffsetYPx // (self.cellSize + self.gridLineWidth)
 
     def toggleCell(self, xyMousePosTuple):
         x, y = xyMousePosTuple
-        col = (x - self.gridCoordMargin - GRID_LINE_WIDTH + self.gridOffsetXPx) // (GRID_LINE_WIDTH + self.cellSize)
-        row = (y - self.gridCoordMargin - GRID_LINE_WIDTH + self.gridOffsetYPx) // (GRID_LINE_WIDTH + self.cellSize)
+        col = (x - self.gridCoordMargin - self.gridLineWidth + self.gridOffsetXPx) // (self.gridLineWidth + self.cellSize)
+        row = (y - self.gridCoordMargin - self.gridLineWidth + self.gridOffsetYPx) // (self.gridLineWidth + self.cellSize)
 
         if self.cellValueGrid[row][col]:
             self.cellValueGrid[row][col] = 0

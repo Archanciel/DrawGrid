@@ -278,7 +278,8 @@ class ConfigurationManager:
 
     @property
     def activeCellColor(self):
-        return self.__activeCellColor
+        colorRGB = self.__activeCellColor.split(',')
+        return int(colorRGB[0]), int(colorRGB[1]), int(colorRGB[2])
 
     @activeCellColor.setter
     def activeCellColor(self, activeCellColorStr):
@@ -287,8 +288,36 @@ class ConfigurationManager:
 
 
     @property
+    def gridLineWidth(self):
+        '''
+        Returns first component of grid line width tuple as integer.
+        '''
+        return self.gridLineWidthTuple[0]
+
+    @property
+    def cellSizeOffset(self):
+        '''
+        Returns second component of grid line width tuple as integer.
+
+        The second value in the tuple is a constant used when drawing an active cell to correct
+        an unexplained error which introduce blank pixels at top and left of the drawned
+        rectangle when the grid line width is bigger than 2 !
+        '''
+        return self.gridLineWidthTuple[1]
+
+    @property
     def gridLineWidthTuple(self):
-        return self.__gridLineWidthTuple
+        '''
+        Possible values for Grid line width tuple:
+        "1, 0", "2, 0", "3, 1", "4, 1", "5, 2", "6, 2", "7, 3", "8, 3"
+        The second value in the tuple is a constant used when drawing an active cell to correct
+        an unexplained error which introduce blank pixels at top and left of the drawned
+        rectangle when the grid line width is bigger than 2 !
+
+        :return: 2 integers tuple
+        '''
+        tupleData = self.__gridLineWidthTuple.split(',')
+        return int(tupleData[0]), int(tupleData[1])
 
     @gridLineWidthTuple.setter
     def gridLineWidthTuple(self, gridLineWidthTupleStr):
@@ -422,7 +451,7 @@ class ConfigurationManager:
             self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE:
                 ["",
                  "Other possible values for " + self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE + ":",
-                 "(2, 0), (3, 1), (4, 1), (5, 2), (6, 2), (7, 3), (8, 3)",
+                 "\"2, 0\", \"3, 1\", \"4, 1\", \"5, 2\", \"6, 2\", \"7, 3\", \"8, 3\"",
                  "The second value in the tuple is a constant used when drawing an active cell to correct",
                  "an unexplained error which introduce blank pixels at top and left of the drawned",
                  "rectangle when the grid line width is bigger than 2 !"],

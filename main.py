@@ -51,9 +51,10 @@ class Game:
         Is the game loop.
         '''
         self.playing = True
+        fps = self.configMgr.fps
 
         while self.playing:
-            self.clock.tick(self.configMgr.fps)
+            self.clock.tick(fps)
             self.handleEvents()
             self.update()
             self.draw()
@@ -62,6 +63,8 @@ class Game:
         '''
         Acquires and handles events.
         '''
+        moveIncrementPx = self.configMgr.gridMoveIncrement
+
         for event in pg.event.get():
             # check for closing window
             if event.type == pg.QUIT:
@@ -124,13 +127,13 @@ class Game:
                 self.gridView.moveViewToRightEnd()
         else:
             if keys[pg.K_DOWN]:
-                self.gridView.moveViewDown(self.configMgr.gridMoveIncrement)
+                self.gridView.moveViewDown(moveIncrementPx)
             if keys[pg.K_UP]:
-                self.gridView.moveViewUp(self.configMgr.gridMoveIncrement)
+                self.gridView.moveViewUp(moveIncrementPx)
             if keys[pg.K_RIGHT]:
-                self.gridView.moveViewRight(self.configMgr.gridMoveIncrement)
+                self.gridView.moveViewRight(moveIncrementPx)
             if keys[pg.K_LEFT]:
-                self.gridView.moveViewLeft(self.configMgr.gridMoveIncrement)
+                self.gridView.moveViewLeft(moveIncrementPx)
 
     def update(self):
         '''

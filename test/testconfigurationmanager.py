@@ -26,14 +26,15 @@ class TestConfigurationManager(unittest.TestCase):
         if os.name == 'posix':
             self.assertEqual(self.configMgr.gridWidth, 791)
             self.assertEqual(self.configMgr.gridHeight, 791)
-            self.assertEqual(self.configMgr.gridLineWidthTuple, 'Half')
             self.assertEqual(self.configMgr.defaultCellSize, '35')
         else:
             self.assertEqual(self.configMgr.gridWidth, 791)
             self.assertEqual(self.configMgr.gridHeight, 791)
-            self.assertEqual(self.configMgr.gridLineWidthTuple, '1, 0')
             self.assertEqual(self.configMgr.defaultCellSize, 15)
 
+        self.assertEqual(self.configMgr.gridLineWidthTuple, (1, 0))
+        self.assertEqual(self.configMgr.gridLineWidth, 1)
+        self.assertEqual(self.configMgr.cellSizeOffset, 0)
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.gridCoordMarginHideCellSizeLimit, 11)
@@ -53,14 +54,15 @@ class TestConfigurationManager(unittest.TestCase):
         if os.name == 'posix':
             self.assertEqual(self.configMgr.gridWidth, 791)
             self.assertEqual(self.configMgr.gridHeight, 791)
-            self.assertEqual(self.configMgr.gridLineWidthTuple, 'Half')
             self.assertEqual(self.configMgr.defaultCellSize, '35')
         else:
             self.assertEqual(self.configMgr.gridWidth, 791)
             self.assertEqual(self.configMgr.gridHeight, 791)
-            self.assertEqual(self.configMgr.gridLineWidthTuple, '1, 0')
             self.assertEqual(self.configMgr.defaultCellSize, 15)
 
+        self.assertEqual(self.configMgr.gridLineWidthTuple, (1, 0))
+        self.assertEqual(self.configMgr.gridLineWidth, 1)
+        self.assertEqual(self.configMgr.cellSizeOffset, 0)
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.gridCoordMarginHideCellSizeLimit, 11)
@@ -80,14 +82,15 @@ class TestConfigurationManager(unittest.TestCase):
         if os.name == 'posix':
             self.assertEqual(self.configMgr.gridWidth, 791)
             self.assertEqual(self.configMgr.gridHeight, 791)
-            self.assertEqual(self.configMgr.gridLineWidthTuple, 'Half')
             self.assertEqual(self.configMgr.defaultCellSize, '35')
         else:
             self.assertEqual(self.configMgr.gridWidth, 791)
             self.assertEqual(self.configMgr.gridHeight, 791)
-            self.assertEqual(self.configMgr.gridLineWidthTuple, '1, 0')
             self.assertEqual(self.configMgr.defaultCellSize, 15)
 
+        self.assertEqual(self.configMgr.gridLineWidthTuple, (1, 0))
+        self.assertEqual(self.configMgr.gridLineWidth, 1)
+        self.assertEqual(self.configMgr.cellSizeOffset, 0)
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.gridCoordMarginHideCellSizeLimit, 11)
@@ -113,14 +116,15 @@ class TestConfigurationManager(unittest.TestCase):
         if os.name == 'posix':
             self.assertEqual(self.configMgr.gridWidth, 791)
             self.assertEqual(self.configMgr.gridHeight, 791)
-            self.assertEqual(self.configMgr.gridLineWidthTuple, 'Half')
             self.assertEqual(self.configMgr.defaultCellSize, '35')
         else:
             self.assertEqual(self.configMgr.gridWidth, 791)
             self.assertEqual(self.configMgr.gridHeight, 791)
-            self.assertEqual(self.configMgr.gridLineWidthTuple, '1, 0')
             self.assertEqual(self.configMgr.defaultCellSize, 15)
 
+        self.assertEqual(self.configMgr.gridLineWidthTuple, (1, 0))
+        self.assertEqual(self.configMgr.gridLineWidth, 1)
+        self.assertEqual(self.configMgr.cellSizeOffset, 0)
         self.assertEqual(self.configMgr.loadAtStartPathFilename, 'griddata.csv')
         self.assertEqual(self.configMgr.activeCellColor, '0, 255, 0')
         self.assertEqual(self.configMgr.gridCoordMarginHideCellSizeLimit, 11)
