@@ -15,7 +15,6 @@ class TestConfigurationManager(unittest.TestCase):
         else:
             self.filePath = 'c:\\temp\\gridview_test.ini'
 
-    @unittest.skip
     def testConfigurationManagerInstanciation(self):
         self.configMgr = ConfigurationManager(self.filePath)
         self.assertEqual(self.configMgr.windowTitle, 'Draw grid')
