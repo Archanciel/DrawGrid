@@ -1,7 +1,7 @@
 import unittest
 import os,sys,inspect
 import csv
-from io import StringIO
+from configurationmanager import ConfigurationManager
 
 DUMMY_HEADER = ["DUMMY HEADER 1", "DUMMY HEADER 2"]
 
@@ -11,7 +11,17 @@ sys.path.insert(0,parentdir)
 
 from griddatamanager import GridDataManager
 
-class TestGridDataManager(unittest.TestCase):#
+class TestGridDataManager(unittest.TestCase):
+    def setUp(self):
+        if os.name == 'posix':
+            self.configFilePath = '/sdcard/gridview_test.ini'
+        else:
+            self.configFilePath = 'c:\\temp\\gridview_test.ini'
+
+        csvFileName = "test.csv"
+        configMgr = ConfigurationManager(self.configFilePath)
+        configMgr.loadAtStartPathFilename = csvFileName
+        self.gridDataMgr = GridDataManager(configMgr)
 
     def testWriteGridData(self):
         '''
@@ -19,12 +29,11 @@ class TestGridDataManager(unittest.TestCase):#
         line as well as with a 0 index column storing the 0 based line index.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 0],
                     [1, 0, 1, 1],
                     [0, 0, 1, 1],
                     [1, 1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
         with open(csvFileName, 'r') as file:
             reader = csv.reader(file, delimiter='\t')
@@ -50,15 +59,13 @@ class TestGridDataManager(unittest.TestCase):#
         matrix is read
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 0],
                     [1, 0, 1, 1],
                     [0, 0, 1, 1],
                     [1, 1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=4, requiredDimY=4)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=4, requiredDimY=4)
 
         self.assertEqual([[1, 1, 0, 0],[1, 0, 1, 1],[0, 0, 1, 1],[1, 1, 1, 1]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -73,14 +80,12 @@ class TestGridDataManager(unittest.TestCase):#
         matrix is read
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 0],
                     [1, 0, 1, 1],
                     [0, 0, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=4, requiredDimY=3)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=4, requiredDimY=3)
 
         self.assertEqual([[1, 1, 0, 0],[1, 0, 1, 1],[0, 0, 1, 1]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -94,15 +99,13 @@ class TestGridDataManager(unittest.TestCase):#
         the gap. Here, a square matrix is handled with only 1 missing row and 1 missing column.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 0],
                     [1, 0, 1, 1],
                     [0, 0, 1, 1],
                     [1, 1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=5, requiredDimY=5)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=5, requiredDimY=5)
 
         self.assertEqual([[1, 1, 0, 0, 0],[1, 0, 1, 1, 0],[0, 0, 1, 1, 0],[1, 1, 1, 1, 0],[0, 0, 0, 0, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -116,15 +119,13 @@ class TestGridDataManager(unittest.TestCase):#
         is read and a 3 x 3 matrix is returned.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 0],
                     [1, 0, 1, 1],
                     [0, 0, 1, 1],
                     [1, 1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=3, requiredDimY=3)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=3, requiredDimY=3)
 
         self.assertEqual([[1, 1, 0],[1, 0, 1],[0, 0, 1]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -138,15 +139,13 @@ class TestGridDataManager(unittest.TestCase):#
         is read and a 2 x 2 matrix is returned.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 0],
                     [1, 0, 1, 1],
                     [0, 0, 1, 1],
                     [1, 1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=2, requiredDimY=2)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=2, requiredDimY=2)
 
         self.assertEqual([[1, 1],[1, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -160,15 +159,13 @@ class TestGridDataManager(unittest.TestCase):#
         the gap. Here, a square matrix is handled with 2 missing rows and 2 missing columns.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 0],
                     [1, 0, 1, 1],
                     [0, 0, 1, 1],
                     [1, 1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=6, requiredDimY=6)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=6, requiredDimY=6)
 
         self.assertEqual([[1, 1, 0, 0, 0, 0],[1, 0, 1, 1, 0, 0],[0, 0, 1, 1, 0, 0],[1, 1, 1, 1, 0, 0],[0, 0, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -183,15 +180,13 @@ class TestGridDataManager(unittest.TestCase):#
         1 missing rows and 2 missing columns.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0],
                     [1, 0, 1],
                     [0, 0, 1],
                     [1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=5, requiredDimY=5)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=5, requiredDimY=5)
 
         self.assertEqual([[1, 1, 0, 0, 0],[1, 0, 1, 0, 0],[0, 0, 1, 0, 0],[1, 1, 1, 0, 0],[0, 0, 0, 0, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -206,15 +201,13 @@ class TestGridDataManager(unittest.TestCase):#
         columns
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0],
                     [1, 0, 1],
                     [0, 0, 1],
                     [1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=3, requiredDimY=1)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=3, requiredDimY=1)
 
         self.assertEqual([[1, 1, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -228,15 +221,13 @@ class TestGridDataManager(unittest.TestCase):#
         matrix is handled with returning a 2 x 2 square matrix, i.e. 2 excess rows and 1 excess columns
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0],
                     [1, 0, 1],
                     [0, 0, 1],
                     [1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=2, requiredDimY=2)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=2, requiredDimY=2)
 
         self.assertEqual([[1, 1], [1, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -251,14 +242,12 @@ class TestGridDataManager(unittest.TestCase):#
         2 missing rows and 1 missing columns.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 1],
                     [1, 0, 1, 1],
                     [0, 0, 1, 0]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=5, requiredDimY=5)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=5, requiredDimY=5)
 
         self.assertEqual([[1, 1, 0, 1, 0],[1, 0, 1, 1, 0],[0, 0, 1, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -273,15 +262,13 @@ class TestGridDataManager(unittest.TestCase):#
         column.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0],
                     [1, 0, 1],
                     [0, 0, 1],
                     [1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=4, requiredDimY=5)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=4, requiredDimY=5)
 
         self.assertEqual([[1, 1, 0, 0],[1, 0, 1, 0],[0, 0, 1, 0],[1, 1, 1, 0],[0, 0, 0, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -295,14 +282,12 @@ class TestGridDataManager(unittest.TestCase):#
         the gap. Here, a rectangular 3 x 4 matrix is handled with only 1 missing row and 1 missing column.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 0],
                     [1, 0, 1, 1],
                     [1, 1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=5, requiredDimY=4)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=5, requiredDimY=4)
 
         self.assertEqual([[1, 1, 0, 0, 0],[1, 0, 1, 1, 0],[1, 1, 1, 1, 0],[0, 0, 0, 0, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -316,14 +301,12 @@ class TestGridDataManager(unittest.TestCase):#
         the gap. Here, a rectangular 3 x 4 matrix is handled with 0 missing row and 2 missing columns.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 0],
                     [1, 0, 1, 1],
                     [1, 1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=6, requiredDimY=3)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=6, requiredDimY=3)
 
         self.assertEqual([[1, 1, 0, 0, 0, 0],[1, 0, 1, 1, 0, 0],[1, 1, 1, 1, 0, 0]], gridData)
         self.assertIsNone(fileNotFoundName)
@@ -337,14 +320,12 @@ class TestGridDataManager(unittest.TestCase):#
         the gap. Here, a rectangular 3 x 4 matrix is handled with 2 missing row and no missing column.
         '''
         csvFileName = "test.csv"
-        gridDataMgr = GridDataManager(csvFileName)
         gridData = [[1, 1, 0, 0],
                     [1, 0, 1, 1],
                     [1, 1, 1, 1]]
-        gridDataMgr.writeGridData(gridData)
+        self.gridDataMgr.writeGridData(gridData)
 
-        gridDataMgr = GridDataManager(csvFileName)
-        gridData, fileNotFoundName = gridDataMgr.readGridData(requiredDimX=4, requiredDimY=5)
+        gridData, fileNotFoundName = self.gridDataMgr.readGridData(requiredDimX=4, requiredDimY=5)
 
         self.assertEqual([[1, 1, 0, 0],[1, 0, 1, 1],[1, 1, 1, 1],[0, 0, 0, 0],[0, 0, 0, 0]], gridData)
         self.assertIsNone(fileNotFoundName)

@@ -7,6 +7,13 @@ from bordercell import BorderCell
 
 GRID_LINE_COLOR_BLACK = (0, 0, 0)
 
+# Since one cell can occupy a minimum of 1 px and the grid line width
+# is 1 px at the minimum, 2 cells will require at least 1 + 1 + 1 + 1 + 1 = 5 px.
+# 3 cells require at least 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
+# n cells require at least 1 + (n * 2) px. This explains that the smallest possible
+# cell constant SMALLEST_CELL_REQUIRED_PX_NUMBER is 2 pixels.
+SMALLEST_CELL_REQUIRED_PX_NUMBER = 2
+
 class GridView():
 
     def __init__(self, surface, configManager):
@@ -18,7 +25,9 @@ class GridView():
         self.gridLineWidth = configManager.gridLineWidth
         self.cellSizeOffset = configManager.cellSizeOffset
         self.gridDataMgr = GridDataManager(configManager=configManager)
-        self.gridCoordMargin = configManager.gridCoordMarginSize
+        self.gridCoordMarginSize = configManager.gridCoordMarginSize
+        self.gridCoordMarginHideCellSizeLimit = configManager.gridCoordMarginHideCellSizeLimit
+#        self. = configManager.
 
         # varinst storing the number of row/col number that can be displayed in function
         # of the cell size which depends of the zoom in/out level. Their values are set
@@ -58,8 +67,8 @@ class GridView():
         number is function of the cell size which itself depends of the zoom in/out level
         (i.e. how many times the zoomIn()/zoomOut() methods were called.
         '''
-        self.gridViewDisplayableColNb = (self.surface.get_width() - self.gridCoordMargin - self.gridLineWidth) // (self.cellSize + self.gridLineWidth)
-        self.gridViewDisplayableRowNb = (self.surface.get_height() - self.gridCoordMargin - self.gridLineWidth) // (self.cellSize + self.gridLineWidth)
+        self.gridViewDisplayableColNb = (self.surface.get_width() - self.gridCoordMarginSize - self.gridLineWidth) // (self.cellSize + self.gridLineWidth)
+        self.gridViewDisplayableRowNb = (self.surface.get_height() - self.gridCoordMarginSize - self.gridLineWidth) // (self.cellSize + self.gridLineWidth)
 
     def draw(self):
         drawnedRowNumber = self.gridViewDisplayableRowNb
@@ -69,10 +78,10 @@ class GridView():
         # for all the lines, drawing the y axis line number label and the horizontal line itself
 
         while row <= drawnedRowNumber:
-            drawnedRowYCoord = self.gridCoordMargin - self.gridOffsetYPx + (currentRowIndex * (self.cellSize + self.gridLineWidth))
+            drawnedRowYCoord = self.gridCoordMarginSize - self.gridOffsetYPx + (currentRowIndex * (self.cellSize + self.gridLineWidth))
 
             if self.drawAxisLabel:
-                if drawnedRowYCoord < self.gridCoordMargin // 2:
+                if drawnedRowYCoord < self.gridCoordMarginSize // 2:
                     # this happens when the grid view is down shifted (down arrow or mouse down)
                     # so that more than half of the top most cell row is hidden. in this case,
                     # the row number is not written
@@ -93,14 +102,14 @@ class GridView():
 
             # drawing the row horizontal line
 
-            if drawnedRowYCoord < self.gridCoordMargin:
+            if drawnedRowYCoord < self.gridCoordMarginSize:
                 # We do not draw the line if its y coordinate is less than the grid
                 # coordinates margin size. Since the line was skipped, it must be replaced
                 # by a supplementary line at the bottom of the grid
                 drawnedRowNumber += 1
                 continue
             else:
-                pg.draw.line(self.surface, GRID_LINE_COLOR_BLACK, (self.gridCoordMargin, drawnedRowYCoord), (self.surface.get_width(), drawnedRowYCoord), self.gridLineWidth)
+                pg.draw.line(self.surface, GRID_LINE_COLOR_BLACK, (self.gridCoordMarginSize, drawnedRowYCoord), (self.surface.get_width(), drawnedRowYCoord), self.gridLineWidth)
 
         # for all the columns, drawing the x axis column label and the column vertical line itself
 
@@ -109,12 +118,12 @@ class GridView():
         currentColIndex = self.gridOffsetXPx // (self.cellSize + self.gridLineWidth)
 
         while col <= drawnedColNumber:
-            drawnedColXCoord = self.gridCoordMargin - self.gridOffsetXPx + currentColIndex * (self.cellSize + self.gridLineWidth)
+            drawnedColXCoord = self.gridCoordMarginSize - self.gridOffsetXPx + currentColIndex * (self.cellSize + self.gridLineWidth)
 
             # handling column number label
 
             if self.drawAxisLabel:
-                if drawnedColXCoord < self.gridCoordMargin // 2:
+                if drawnedColXCoord < self.gridCoordMarginSize // 2:
                     # this happens when the grid view is right shifted (right arrow or mouse)
                     # so that more than half of the left most cells is hidden. Then, the col
                     # number is not written
@@ -134,14 +143,14 @@ class GridView():
 
             # drawing the column vertical line
 
-            if drawnedColXCoord < self.gridCoordMargin:
+            if drawnedColXCoord < self.gridCoordMarginSize:
                 # We do not draw the column line if its x coordinate is less than the grid
                 # coordinates margin size. Since the column was skipped, it must be replaced
                 # by a supplementary column at the very right of the grid
                 drawnedColNumber += 1
                 continue
             else:
-                pg.draw.line(self.surface, GRID_LINE_COLOR_BLACK, (drawnedColXCoord, self.gridCoordMargin), (drawnedColXCoord, self.surface.get_height()), self.gridLineWidth)
+                pg.draw.line(self.surface, GRID_LINE_COLOR_BLACK, (drawnedColXCoord, self.gridCoordMarginSize), (drawnedColXCoord, self.surface.get_height()), self.gridLineWidth)
 
         # drawing active cells
 
@@ -188,9 +197,9 @@ class GridView():
         if self.cellSize >= self.surface.get_height():
             self.cellSize -= delta
 
-        if self.cellSize > AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT:
+        if self.cellSize > self.gridCoordMarginHideCellSizeLimit:
             self.drawAxisLabel = True
-            self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
+            self.gridCoordMarginSize = self.gridCoordMarginSize
 
         self.setGridDimension()
         self.updateStartDrawRowIndex()
@@ -213,9 +222,9 @@ class GridView():
 
         if self.cellSize > SMALLEST_CELL_REQUIRED_PX_NUMBER:
             self.cellSize -= delta
-            if self.cellSize <= AXIS_LEGEND_HIDE_CELL_SIZE_LIMIT:
+            if self.cellSize <= self.gridCoordMarginHideCellSizeLimit:
                 self.drawAxisLabel = False
-                self.gridCoordMargin = 0
+                self.gridCoordMarginSize = 0
 
         # repositionning the display horizontaly so that only editable cells (cells in
         # self.cellValueGrid) are displayed, preventing to set a cell value on a cell
@@ -329,7 +338,7 @@ class GridView():
         cellPlusSideWidthPxNumber = self.cellSize + self.gridLineWidth
 
         # calculate how many cells can be drawned in the cell display zone
-        displayableCellNumber = (self.surface.get_width() - self.gridLineWidth - self.gridCoordMargin) / \
+        displayableCellNumber = (self.surface.get_width() - self.gridLineWidth - self.gridCoordMarginSize) / \
                                 cellPlusSideWidthPxNumber
 
         # determine the max allowed horizontal offset in pixels according to how many cells
@@ -352,7 +361,7 @@ class GridView():
         cellPlusSideHeightPxNumber = self.cellSize + self.gridLineWidth
 
         # calculate how many cells can be drawned in the cell display zone
-        displayableCellNumber = (self.surface.get_height() - self.gridLineWidth - self.gridCoordMargin) / \
+        displayableCellNumber = (self.surface.get_height() - self.gridLineWidth - self.gridCoordMarginSize) / \
                                 cellPlusSideHeightPxNumber
 
         # determine the max allowed vertical offset in pixels according to how many cells
@@ -411,8 +420,8 @@ class GridView():
 
     def toggleCell(self, xyMousePosTuple):
         x, y = xyMousePosTuple
-        col = (x - self.gridCoordMargin - self.gridLineWidth + self.gridOffsetXPx) // (self.gridLineWidth + self.cellSize)
-        row = (y - self.gridCoordMargin - self.gridLineWidth + self.gridOffsetYPx) // (self.gridLineWidth + self.cellSize)
+        col = (x - self.gridCoordMarginSize - self.gridLineWidth + self.gridOffsetXPx) // (self.gridLineWidth + self.cellSize)
+        row = (y - self.gridCoordMarginSize - self.gridLineWidth + self.gridOffsetYPx) // (self.gridLineWidth + self.cellSize)
 
         if self.cellValueGrid[row][col]:
             self.cellValueGrid[row][col] = 0

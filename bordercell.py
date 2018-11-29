@@ -48,13 +48,13 @@ class BorderCell(Cell):
         if borderIndependentCellXorYcoordPx > 0:
             # here, the current cell x coordinate is greater than the left gridView limit and so must be
             # drawn entirely or partially ...
-            cellCoordOffset = gridView.gridCoordMargin - borderIndependentCellXorYcoordPx
+            cellCoordOffset = gridView.gridCoordMarginSize - borderIndependentCellXorYcoordPx
             if cellCoordOffset > 0:
-                if cellCoordOffset < gridView.gridCoordMargin:
+                if cellCoordOffset < gridView.gridCoordMarginSize:
                     # here, we moved the gridView to the left to a point where the current active cell is partially
                     # at the left of the col margin (gridView coord margin where the row/col numbers are displayed)
                     cellSizePx = gridView.cellSize - cellCoordOffset
-                    drawnedCellXorYcoordPx = gridView.gridCoordMargin
+                    drawnedCellXorYcoordPx = gridView.gridCoordMarginSize
                     print(Cell.getExecInfo(gridView, cellRowOrColIndex, doComputeX))
                 else:
                     # here, the current active cell is behond the gridView coord margin and is drawn entirely
@@ -65,9 +65,9 @@ class BorderCell(Cell):
                 cellSizePx = gridView.cellSize
         else:
             # here, the current cell x coord is at the left of the left gridView limit
-            cellCoordOffset = gridView.gridCoordMargin + borderIndependentCellXorYcoordPx
+            cellCoordOffset = gridView.gridCoordMarginSize + borderIndependentCellXorYcoordPx
             if cellCoordOffset >= 0:
-                if cellCoordOffset <= gridView.gridCoordMargin:
+                if cellCoordOffset <= gridView.gridCoordMarginSize:
                     # here, the current active cell x coord is at the left of the left
                     # gridView limit. But part or of the cell has to be drawn for the part
                     # which is still at the right of the gridView coord margin
@@ -76,17 +76,17 @@ class BorderCell(Cell):
                     offset = currentGridXorYOffsetPx - (GRID_LINE_WIDTH + gridView.cellSize) * cellRowOrColIndex
 
                     cellSizePx = gridView.cellSize - offset + GRID_LINE_WIDTH
-                    drawnedCellXorYcoordPx = gridView.gridCoordMargin
+                    drawnedCellXorYcoordPx = gridView.gridCoordMarginSize
                     print(Cell.getExecInfo(gridView, cellRowOrColIndex, doComputeX))
-                # else: this case is not possible since activeCellCoordOffset = gridView.gridCoordMargin + negative
+                # else: this case is not possible since activeCellCoordOffset = gridView.gridCoordMarginSize + negative
                 # value
             elif cellCoordOffset < 0:
-                if abs(cellCoordOffset) <= gridView.gridCoordMargin:
+                if abs(cellCoordOffset) <= gridView.gridCoordMarginSize:
                     # the move offset must account for the number of columns already moved to the left ...
                     offset = currentGridXorYOffsetPx + (GRID_LINE_WIDTH + gridView.cellSize) * cellRowOrColIndex
 
                     cellSizePx = gridView.cellSize + offset + GRID_LINE_WIDTH
-                    drawnedCellXorYcoordPx = gridView.gridCoordMargin
+                    drawnedCellXorYcoordPx = gridView.gridCoordMarginSize
                     print(Cell.getExecInfo(gridView, cellRowOrColIndex, doComputeX))
                 else:
                     # the move offset must account for the number of columns already moved to the left ...
@@ -94,7 +94,7 @@ class BorderCell(Cell):
 
                     cellwidth = gridView.cellSize - offset + GRID_LINE_WIDTH
                     cellSizePx = cellwidth
-                    drawnedCellXorYcoordPx = gridView.gridCoordMargin
+                    drawnedCellXorYcoordPx = gridView.gridCoordMarginSize
                     print(Cell.getExecInfo(gridView, cellRowOrColIndex, doComputeX))
 
         return drawnedCellXorYcoordPx, cellSizePx
