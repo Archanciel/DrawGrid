@@ -379,19 +379,19 @@ class ConfigurationManager:
         if not self._updated:
             return
 
-        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_ACTIVE_CELL_COLOR] = self.activeCellColor
-        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE] = self.gridLineWidthTuple
-        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_CELL_SIZE] = self.defaultCellSize
-        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_LOAD_AT_START_PATH_FILENAME] = self.loadAtStartPathFilename
-        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_WINDOW_TITLE] = self.windowTitle
-        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_WINDOW_LOCATION] = self.windowLocation
-        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_WIDTH] = self.gridWidth
-        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_HEIGHT] = self.gridHeight
-        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_FPS] = self.fps
-        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT] = self.gridCoordMarginHideCellSizeLimit
-        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_COORD_MARGIN_SIZE] = self.gridCoordMarginSize
-        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_AXIS_FONT_SIZE] = self.gridAxisFontSize
-        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_MOVE_INCREMENT] = self.gridMoveIncrement
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_ACTIVE_CELL_COLOR] = self.__activeCellColor
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_GRID_LINE_WIDTH_TUPLE] = self.__gridLineWidthTuple
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_CELL_SIZE] = self.__defaultCellSize
+        self.config[self.CONFIG_SECTION_GRID_LAYOUT][self.CONFIG_KEY_LOAD_AT_START_PATH_FILENAME] = self.__loadAtStartPathFilename
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_WINDOW_TITLE] = self.__windowTitle
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_WINDOW_LOCATION] = self.__windowLocation
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_WIDTH] = self.__gridWidth
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_HEIGHT] = self.__gridHeight
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_FPS] = self.__fps
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_COORD_MARGIN_HIDE_CELL_SIZE_LIMIT] = self.__gridCoordMarginHideCellSizeLimit
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_COORD_MARGIN_SIZE] = self.__gridCoordMarginSize
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_AXIS_FONT_SIZE] = self.__gridAxisFontSize
+        self.config[self.CONFIG_SECTION_VIEW_LAYOUT][self.CONFIG_KEY_GRID_MOVE_INCREMENT] = self.__gridMoveIncrement
 
         self.addCommentsToIniFile()
 
