@@ -159,6 +159,9 @@ class Game:
         '''
         Tk().wm_withdraw()  # to hide the main window
         if messagebox.askquestion(None, 'Do you want to load existing grid data ?') == 'yes':
+            # here, we ask the GridView to load the grid data from the file specified in the gridview.ini
+            # configuration file (loadatstartpathfilename setting). In case the grid data file is not found,
+            # an error msg box informs the user.
             fileNotFoundName = self.gridView.loadGridData()
             if fileNotFoundName:
                 messagebox.showerror(None, fileNotFoundName + ' not found. Grid initialized with neutral data !')
