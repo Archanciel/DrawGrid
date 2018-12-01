@@ -1,7 +1,6 @@
 import os
 from configobj import ConfigObj
 
-
 class ConfigurationManager:
     # those constants are used outside of ConfigurationManager. For this reason,
     # they are declared inside the class
