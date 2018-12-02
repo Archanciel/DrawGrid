@@ -16,7 +16,7 @@ import os
 EVENT_BUTTON_ONE = 1
 WHITE = (255, 255, 255)
 
-class Game:
+class GridViewController:
     def __init__(self):
         '''
         Initializes game window, etc.
@@ -143,7 +143,7 @@ class Game:
 
     def draw(self):
         '''
-        Redraws all game objects.
+        Redraws all game objects. Thw actual drawing is delegated to the GridView class.
         '''
         if self.gridView.changed:
             # optimization: the grid is only drawned if something changed on it
@@ -175,7 +175,7 @@ class Game:
         '''
         pass
 
-g = Game()
+g = GridViewController()
 g.show_start_screen()
 
 while g.running:
